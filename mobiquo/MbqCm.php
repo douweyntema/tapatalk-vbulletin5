@@ -47,6 +47,22 @@ Class MbqCm extends MbqBaseCm {
         return $str;
     }
     
+    /**
+     * get attachment ids from content
+     * here return filedataids from content
+     *
+     * @params  String  $content
+     * @return  Array
+     */
+    public function getAttIdsFromContent($content) {
+        preg_match_all('/\[ATTACH=CONFIG\]n(.*?)\[\/ATTACH\]/i', $content, $mat);
+        if ($mat[1]) {
+            return $mat[1];
+        } else {
+            return array();
+        }
+    }
+    
 }
 
 ?>

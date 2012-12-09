@@ -65,10 +65,14 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
                 	$oMbqDataPage->totalNum = 0;
                 	$arrTopicRecord = array();
                 }
+                $nodeIds = array();
+                foreach ($arrTopicRecord as $topicRecord) {
+                    $nodeIds[] = $topicRecord['nodeid'];
+                }
                 /* common begin */
-                $mbqOpt['case'] = 'byArrTopicRecord';
+                $mbqOpt['case'] = 'byTopicIds';
                 $mbqOpt['oMbqDataPage'] = $oMbqDataPage;
-                return $this->getObjsMbqEtForumTopic($arrTopicRecord, $mbqOpt);
+                return $this->getObjsMbqEtForumTopic($nodeIds, $mbqOpt);
                 /* common end */
             }
         } elseif ($mbqOpt['case'] == 'byAuthor') {
@@ -91,10 +95,14 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
                 	$oMbqDataPage->totalNum = 0;
                 	$arrTopicRecord = array();
                 }
+                $nodeIds = array();
+                foreach ($arrTopicRecord as $topicRecord) {
+                    $nodeIds[] = $topicRecord['nodeid'];
+                }
                 /* common begin */
-                $mbqOpt['case'] = 'byArrTopicRecord';
+                $mbqOpt['case'] = 'byTopicIds';
                 $mbqOpt['oMbqDataPage'] = $oMbqDataPage;
-                return $this->getObjsMbqEtForumTopic($arrTopicRecord, $mbqOpt);
+                return $this->getObjsMbqEtForumTopic($nodeIds, $mbqOpt);
                 /* common end */
             }
         } elseif ($mbqOpt['case'] == 'byTopicIds') {

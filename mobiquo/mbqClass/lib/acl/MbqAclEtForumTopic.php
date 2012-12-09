@@ -24,6 +24,16 @@ Class MbqAclEtForumTopic extends MbqBaseAclEtForumTopic {
     public function canAclGetTopic($oMbqEtForum) {
         return true;
     }
+    
+    /**
+     * judge can get thread
+     *
+     * @param  Object  $oMbqEtForumTopic
+     * @return  Boolean
+     */
+    public function canAclGetThread($oMbqEtForumTopic) {
+        return true;
+    }
   
 }
 

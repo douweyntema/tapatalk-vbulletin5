@@ -22,6 +22,309 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             break;
         }
     }
+    
+    /**
+     * get forum post objs
+     *
+     * @param  Mixed  $var
+     * @param  Array  $mbqOpt
+     * $mbqOpt['case'] = 'byTopic' means get data by forum topic obj.$var is the forum topic obj.
+     * $mbqOpt['case'] = 'byPostIds' means get data by post ids.$var is the ids.
+     * $mbqOpt['case'] = 'byArrPostRecord' means get data by byArrPostRecord.$var is the byArrPostRecord.
+     * $mbqOpt['case'] = 'byReplyUser' means get data by reply user.$var is the MbqEtUser obj.
+     * @return  Mixed
+     */
+    public function getObjsMbqEtForumPost($var, $mbqOpt) {
+        if ($mbqOpt['case'] == 'byTopic') {
+            $oMbqEtForumTopic = $var;
+            if ($mbqOpt['oMbqDataPage']) {
+            	$search['channel'] = $oMbqEtForumTopic->topicId->oriValue;
+            	$search['contenttypeid'] = vB_Api::instanceInternal('contenttype')->fetchContentTypeIdFromClass('Text');
+            	$search['view'] = vB_Api_Search::FILTER_VIEW_CONVERSATION_THREAD;
+            	$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
+	            $search['sort']['publishdate'] = 'asc';
+            	try {
+                	$result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
+                	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                    	$oMbqDataPage->totalNum = $result['totalRecords'];
+                    	$arrPostRecord = $result['results'];
+                    } else {
+                    	$oMbqDataPage->totalNum = 0;
+                    	$arrPostRecord = array();
+                    }
+                } catch (Exception $e) {
+                	$oMbqDataPage->totalNum = 0;
+                	$arrPostRecord = array();
+                }
+                $nodeIds = array();
+                foreach ($arrPostRecord as $postRecord) {
+                    $nodeIds[] = $postRecord['nodeid'];
+                }
+                /* common begin */
+                $mbqOpt['case'] = 'byPostIds';
+                $mbqOpt['oMbqDataPage'] = $oMbqDataPage;
+                return $this->getObjsMbqEtForumPost($nodeIds, $mbqOpt);
+                /* common end */
+            }
+        } elseif ($mbqOpt['case'] == 'byPostIds') {
+        	try {
+            	$result = vB_Api::instanceInternal('node')->getFullContentforNodes($var);
+            	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                	$arrPostRecord = $result;
+                } else {
+                	$arrPostRecord = array();
+                }
+            } catch (Exception $e) {
+            	$arrPostRecord = array();
+            }
+            /* common begin */
+            $mbqOpt['case'] = 'byArrPostRecord';
+            return $this->getObjsMbqEtForumPost($arrPostRecord, $mbqOpt);
+            /* common end */
+        } elseif ($mbqOpt['case'] == 'byReplyUser') {
+            if ($mbqOpt['oMbqDataPage']) {
+            	$search['authorid'] = $var->userId->oriValue;
+            	$search['contenttypeid'] = vB_Api::instanceInternal('contenttype')->fetchContentTypeIdFromClass('Text');
+            	$search['view'] = vB_Api_Search::FILTER_VIEW_CONVERSATION_THREAD;
+            	$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
+	            $search['sort']['publishdate'] = 'asc';
+            	try {
+                	$result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
+                	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                    	$oMbqDataPage->totalNum = $result['totalRecords'];
+                    	$arrPostRecord = $result['results'];
+                    } else {
+                    	$oMbqDataPage->totalNum = 0;
+                    	$arrPostRecord = array();
+                    }
+                } catch (Exception $e) {
+                	$oMbqDataPage->totalNum = 0;
+                	$arrPostRecord = array();
+                }
+                $nodeIds = array();
+                foreach ($arrPostRecord as $postRecord) {
+                    $nodeIds[] = $postRecord['nodeid'];
+                }
+                /* common begin */
+                $mbqOpt['case'] = 'byPostIds';
+                $mbqOpt['oMbqDataPage'] = $oMbqDataPage;
+                return $this->getObjsMbqEtForumPost($nodeIds, $mbqOpt);
+                /* common end */
+            }
+        } elseif ($mbqOpt['case'] == 'byArrPostRecord') {
+            $arrPostRecord = $var;
+            /* common begin */
+            $objsMbqEtForumPost = array();
+            $authorUserIds = array();
+            $topicIds = array();
+            foreach ($arrPostRecord as $postRecord) {
+                $objsMbqEtForumPost[] = $this->initOMbqEtForumPost($postRecord, array('case' => 'postRecord'));
+            }
+            foreach ($objsMbqEtForumPost as $oMbqEtForumPost) {
+                $authorUserIds[$oMbqEtForumPost->postAuthorId->oriValue] = $oMbqEtForumPost->postAuthorId->oriValue;
+                $topicIds[$oMbqEtForumPost->topicId->oriValue] = $oMbqEtForumPost->topicId->oriValue;
+            }
+            /* load oMbqEtForumTopic property and oMbqEtForum property */
+            $oMbqRdEtForumTopic = MbqMain::$oClk->newObj('MbqRdEtForumTopic');
+            $objsMbqEtFroumTopic = $oMbqRdEtForumTopic->getObjsMbqEtForumTopic($topicIds, array('case' => 'byTopicIds'));
+            foreach ($objsMbqEtFroumTopic as $oNewMbqEtFroumTopic) {
+                foreach ($objsMbqEtForumPost as &$oMbqEtForumPost) {
+                    if ($oNewMbqEtFroumTopic->topicId->oriValue == $oMbqEtForumPost->topicId->oriValue) {
+                        $oMbqEtForumPost->oMbqEtForumTopic = $oNewMbqEtFroumTopic;
+                        if ($oMbqEtForumPost->oMbqEtForumTopic->oMbqEtForum) {
+                            $oMbqEtForumPost->oMbqEtForum = $oMbqEtForumPost->oMbqEtForumTopic->oMbqEtForum;
+                            $oMbqEtForumPost->forumId->setOriValue($oMbqEtForumPost->oMbqEtForum->forumId->oriValue);
+                        }
+                    }
+                }
+            }
+            /* load post author */
+            $oMbqRdEtUser = MbqMain::$oClk->newObj('MbqRdEtUser');
+            $objsAuthorMbqEtUser = $oMbqRdEtUser->getObjsMbqEtUser($authorUserIds, array('case' => 'byUserIds'));
+            $postIds = array();
+            foreach ($objsMbqEtForumPost as &$oMbqEtForumPost) {
+                $postIds[] = $oMbqEtForumPost->postId->oriValue;
+                foreach ($objsAuthorMbqEtUser as $oAuthorMbqEtUser) {
+                    if ($oMbqEtForumPost->postAuthorId->oriValue == $oAuthorMbqEtUser->userId->oriValue) {
+                        $oMbqEtForumPost->oAuthorMbqEtUser = $oAuthorMbqEtUser;
+                        if ($oMbqEtForumPost->oAuthorMbqEtUser->isOnline->hasSetOriValue()) {
+                            $oMbqEtForumPost->isOnline->setOriValue($oMbqEtForumPost->oAuthorMbqEtUser->isOnline->oriValue ? MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumPost.isOnline.range.yes') : MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumPost.isOnline.range.no'));
+                        }
+                        if ($oMbqEtForumPost->oAuthorMbqEtUser->iconUrl->hasSetOriValue()) {
+                            $oMbqEtForumPost->authorIconUrl->setOriValue($oMbqEtForumPost->oAuthorMbqEtUser->iconUrl->oriValue);
+                        }
+                        break;
+                    }
+                }
+            }
+            /* load attachment */
+            $oMbqRdEtAtt =  MbqMain::$oClk->newObj('MbqRdEtAtt');
+            $objsMbqEtAtt = $oMbqRdEtAtt->getObjsMbqEtAtt($postIds, array('case' => 'byForumPostIds'));
+            foreach ($objsMbqEtAtt as $oMbqEtAtt) {
+                foreach ($objsMbqEtForumPost as &$oMbqEtForumPost) {
+                    if ($oMbqEtForumPost->postId->oriValue == $oMbqEtAtt->postId->oriValue) {
+                        $oMbqEtForumPost->objsMbqEtAtt[] = $oMbqEtAtt;
+                    }
+                }
+            }
+            /* load objsNotInContentMbqEtAtt */
+            foreach ($objsMbqEtForumPost as &$oMbqEtForumPost) {
+                $filedataids = MbqMain::$oMbqCm->getAttIdsFromContent($oMbqEtForumPost->postContent->oriValue);
+                foreach ($oMbqEtForumPost->objsMbqEtAtt as $oMbqEtAtt) {
+                    if (!in_array($oMbqEtAtt->mbqBind['attRecord']['filedataid'], $filedataids)) {
+                        $oMbqEtForumPost->objsNotInContentMbqEtAtt[] = $oMbqEtAtt;
+                    }
+                }
+            }
+            /* load objsMbqEtThank property and make related properties/flags */
+            //
+            /* make other properties */
+            //
+            /* common end */
+            if ($mbqOpt['oMbqDataPage']) {
+                $oMbqDataPage = $mbqOpt['oMbqDataPage'];
+                $oMbqDataPage->datas = $objsMbqEtForumPost;
+                return $oMbqDataPage;
+            } else {
+                return $objsMbqEtForumPost;
+            }
+        }
+        MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_UNKNOWN_CASE);
+    }
+    
+    /**
+     * init one forum post by condition
+     *
+     * @param  Mixed  $var
+     * @param  Array  $mbqOpt
+     * $mbqOpt['case'] = 'postRecord' means init forum post by postRecord
+     * $mbqOpt['case'] = 'byPostId' means init forum post by post id
+     * @return  Mixed
+     */
+    public function initOMbqEtForumPost($var, $mbqOpt) {
+        if ($mbqOpt['case'] == 'postRecord') {
+            $nodeid = $var['content']['nodeid'];
+            $result = vB_Api::instanceInternal('content_text')->getDataForParse(array($nodeid));
+            $macro = vB5_Template_NodeText::instance()->register($nodeid, $result[$nodeid]['bbcodeoptions']);
+            vB5_Template_NodeText::instance()->replacePlaceholders($macro);
+            $oMbqEtForumPost = MbqMain::$oClk->newObj('MbqEtForumPost');
+            $oMbqEtForumPost->postId->setOriValue($var['content']['nodeid']);
+            $oMbqEtForumPost->forumId->setOriValue($var['content']['channelid']);
+            $oMbqEtForumPost->topicId->setOriValue($var['content']['starter']);
+            $oMbqEtForumPost->postTitle->setOriValue($var['content']['title']);
+            $oMbqEtForumPost->postAuthorId->setOriValue($var['content']['userid']);
+            $oMbqEtForumPost->postTime->setOriValue($var['content']['created']);
+            $oMbqEtForumPost->mbqBind['postRecord'] = $var;
+            $oMbqEtForumPost->mbqBind['bbcodeoptions'] = $result[$nodeid]['bbcodeoptions'];
+            $oMbqEtForumPost->postContent->setOriValue($var['content']['rawtext']);
+            $oMbqEtForumPost->postContent->setAppDisplayValue($macro);
+            $oMbqEtForumPost->postContent->setTmlDisplayValue($this->processContentForDisplay($macro, true, $oMbqEtForumPost));
+            $oMbqEtForumPost->postContent->setTmlDisplayValueNoHtml($this->processContentForDisplay($macro, false, $oMbqEtForumPost));
+            $oMbqEtForumPost->shortContent->setOriValue(MbqMain::$oMbqCm->getShortContent($oMbqEtForumPost->postContent->tmlDisplayValue));
+            return $oMbqEtForumPost;
+        } elseif ($mbqOpt['case'] == 'byPostId') {
+            $objsMbqEtForumPost = $this->getObjsMbqEtForumPost(array($var), array('case' => 'byPostIds'));
+            if ($objsMbqEtForumPost) {
+                return $objsMbqEtForumPost[0];
+            } else {
+                return false;
+            }
+        }
+        MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_UNKNOWN_CASE);
+    }
+    
+    /**
+     * process content for display in mobile app
+     *
+     * @params  String  $content
+     * @params  Boolean  $returnHtml
+     * @params  Object  $oMbqEtForumPost
+     * @return  String
+     */
+    public function processContentForDisplay($content, $returnHtml, $oMbqEtForumPost) {
+        /*
+        support bbcode:url/img/quote
+        support html:br/i/b/u/font+color(red/blue)
+        <strong> -> <b>
+        attention input param:return_html
+        attention output param:post_content
+        */
+        $post = $content;
+        if ($returnHtml) {
+            if ($oMbqEtForumPost->mbqBind['bbcodeoptions']['allowsmilies']) {
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/biggrin.png" .*?smilieid=".*?".*? \/>/i', ':D', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/frown.png" .*?smilieid=".*?".*? \/>/i', ':(', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/mad.png" .*?smilieid=".*?".*? \/>/i', ':mad:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/tongue.png" .*?smilieid=".*?".*? \/>/i', ':p', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/redface.png" .*?smilieid=".*?".*? \/>/i', ':o', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/confused.png" .*?smilieid=".*?".*? \/>/i', ':confused:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/wink.png" .*?smilieid=".*?".*? \/>/i', ';)', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/smile.png" .*?smilieid=".*?".*? \/>/i', ':)', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/rolleyes.png" .*?smilieid=".*?".*? \/>/i', ':rolleyes:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/cool.png" .*?smilieid=".*?".*? \/>/i', ':cool:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/eek.png" .*?smilieid=".*?".*? \/>/i', ':eek:', $post);
+            } else {
+            }
+            if ($oMbqEtForumPost->mbqBind['bbcodeoptions']['allowbbcode']) {
+    	        $post = preg_replace_callback('/<font color=\"(\#.*?)\">(.*?)<\/font>/is', create_function('$matches','return MbqMain::$oMbqCm->mbColorConvert($matches[1], $matches[2]);'), $post);
+            	$post = str_ireplace('<strong>', '<b>', $post);
+            	$post = str_ireplace('</strong>', '</b>', $post);
+    	        $post = preg_replace('/<img .*?src="(.*?)" .*?\/>/i', '[img]$1[/img]', $post);
+    	        $post = preg_replace('/<a .*?href="mailto:(.*?)".*?>(.*?)<\/a>/i', '[url=$1]$2[/url]', $post);
+    	        $post = preg_replace('/<a .*?href="(.*?)".*?>(.*?)<\/a>/i', '[url=$1]$2[/url]', $post);
+    	        //todo quote/code/html/php
+    	        
+    	        $post = preg_replace('/<object .*?>.*?<embed src="(.*?)".*?><\/embed><\/object>/is', '[url=$1]$1[/url]', $post); /* for youtube content etc. */
+                $post = str_ireplace('<hr />', '<br />____________________________________<br />', $post);
+        	    $post = str_ireplace('<li>', "\t\t<li>", $post);
+        	    $post = str_ireplace('</li>', "</li><br />", $post);
+        	    $post = str_ireplace('</tr>', '</tr><br />', $post);
+        	    $post = str_ireplace('</td>', "</td>\t\t", $post);
+    	        $post = str_ireplace('</div>', '</div><br />', $post);
+    	        $post = str_ireplace('&nbsp;', ' ', $post);
+    	        $post = strip_tags($post, '<br><i><b><u><font>');
+            } else {
+            }
+        } else {
+    	    $post = strip_tags($post);
+        }
+    	$post = trim($post);
+    	return $post;
+    }
+    
+    /**
+     * return quote post content
+     *
+     * @param  Object  $oMbqEtForumPost
+     * @return  String
+     */
+    public function getQuotePostContent($oMbqEtForumPost) {
+        /*
+        $content = preg_replace('/.*<a href="#tapatalkQuoteEnd"><\/a>/i', '', $oMbqEtForumPost->postContent->oriValue);
+        $userDisplayName = $oMbqEtForumPost->oAuthorMbqEtUser ? $oMbqEtForumPost->oAuthorMbqEtUser->getDisplayName() : '';
+        $ret = '<a href="#tapatalkQuoteBegin-'.$userDisplayName.'"><font color="gray"><b><u>'.$userDisplayName.' wrote:</u></b></font></a><br />';
+        $ret .= '<font color="gray"><i>'.trim($content).'</i></font>';
+        $ret .= '<a href="#tapatalkQuoteEnd"></a>';
+        */
+        $content = preg_replace('/.*<a href="#tapatalkQuoteEnd"><\/a>/is', '', $oMbqEtForumPost->postContent->oriValue);
+        $userDisplayName = $oMbqEtForumPost->oAuthorMbqEtUser ? $oMbqEtForumPost->oAuthorMbqEtUser->getDisplayName() : '';
+        $ret = "[quote=\"$userDisplayName\"]".trim($content)."[/quote]\n\n";
+        return $ret;
+    }
+    
+    /**
+     * return raw post content
+     *
+     * @param  Object  $oMbqEtForumPost
+     * @return  String
+     */
+    public function getRawPostContent($oMbqEtForumPost) {
+        //need convert quote html code to bbcode quote
+        $content = $oMbqEtForumPost->postContent->oriValue;
+    	$content = preg_replace('/<a .*?href="#tapatalkQuoteBegin-(.*?)">.*?<\/a>/i', '[quote="$1"]', $content);
+    	$content = preg_replace('/<a .*?href="#tapatalkQuoteEnd"><\/a>/i', '[/quote]', $content);
+    	return $content;
+    }
   
 }
 

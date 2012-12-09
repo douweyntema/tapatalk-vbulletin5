@@ -36,10 +36,10 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
         if ($mbqOpt['case'] == 'byUserIds') {
             $arrUserRecord = array();
             foreach ($var as $userId) {
-            	try {
-                	$result = vB_Api::instanceInternal('user')->fetchProfileInfo($userId);
-                	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
-                	    $arrUserRecord[] = $result;
+                try {
+                    $result = vB_Api::instanceInternal('user')->fetchProfileInfo($userId);
+                    if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                        $arrUserRecord[] = $result;
                     } else {
                         //
                     }
@@ -53,10 +53,10 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
             }
             return $objsMbqEtUser;
         } elseif ($mbqOpt['case'] == 'online') {
-        	try {
-            	$result = vB_Api::instance('wol')->fetchAll();
-            	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
-            	    $userIds = array();
+            try {
+                $result = vB_Api::instance('wol')->fetchAll();
+                if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                    $userIds = array();
                     foreach ($result as $record) {
                         $userIds[] = $record['userid'];
                     }
@@ -90,7 +90,7 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
             $oMbqEtUser->userGroupIds->setOriValue(array($var['usergroupid']));
             $iconUrl = vB_Api::instanceInternal('user')->fetchAvatar($var['userid'], true);
             $iconUrl = $iconUrl['avatarpath'];
-            $iconUrl = vB5_Config::instance()->baseurl_core . '/' . $iconUrl;
+            $iconUrl = MbqMain::$oMbqAppEnv->baseUrlCore . '/' . $iconUrl;
             $oMbqEtUser->iconUrl->setOriValue($iconUrl);
             $oMbqEtUser->canSearch->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canSearch.range.yes'));
             $oMbqEtUser->postCount->setOriValue($var['posts']);
@@ -108,9 +108,9 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
             }
             return false;
         } elseif ($mbqOpt['case'] == 'byLoginName') {
-        	try {
-            	$result = vB_Api::instanceInternal('user')->fetchByUsername($var);
-            	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+            try {
+                $result = vB_Api::instanceInternal('user')->fetchByUsername($var);
+                if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
                     return $this->initOMbqEtUser($result['userid'], array('case' => 'byUserId'));
                 } else {
                     return false;
@@ -140,49 +140,30 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
      * @return  Boolean  return true when login success.
      */
     public function login($loginName, $password) {
-        $oEntryController = new EntryController();
-        $oEntryController->Initialize();
-        /* modified from EntryController::SignIn() */
-        $oEntryController->FireEvent('SignIn');
-        //$Email = $this->Form->GetFormValue('Email');
-        $Email = $loginName;
-        $User = Gdn::UserModel()->GetByEmail($Email);
-        if (!$User)
-           $User = Gdn::UserModel()->GetByUsername($Email);
-
-        if (!$User) {
-           //$this->Form->AddError('ErrorCredentials');
-           return false;
-        } else {
-           //$ClientHour = $this->Form->GetFormValue('ClientHour');
-           $ClientHour = date('Y-m-d H:i');
-           $HourOffset = Gdn_Format::ToTimestamp($ClientHour) - time();
-           $HourOffset = round($HourOffset / 3600);
-
-           // Check the password.
-           $PasswordHash = new Gdn_PasswordHash();
-           //if ($PasswordHash->CheckPassword($this->Form->GetFormValue('Password'), GetValue('Password', $User), GetValue('HashMethod', $User))) {
-           if ($PasswordHash->CheckPassword($password, GetValue('Password', $User), GetValue('HashMethod', $User))) {
-              //Gdn::Session()->Start(GetValue('UserID', $User), TRUE, (bool)$this->Form->GetFormValue('RememberMe'));
-              Gdn::Session()->Start(GetValue('UserID', $User), TRUE, TRUE);
-              if (!Gdn::Session()->CheckPermission('Garden.SignIn.Allow')) {
-                 //$this->Form->AddError('ErrorPermission');
-                 Gdn::Session()->End();
-                 return false;
-              } else {
-                 if ($HourOffset != Gdn::Session()->User->HourOffset) {
-                    Gdn::UserModel()->SetProperty(Gdn::Session()->UserID, 'HourOffset', $HourOffset);
-                 }
-                 MbqMain::$oMbqAppEnv->oCurStdUser = $User;
-
-                 //$this->_SetRedirect();
-                 $this->initOCurMbqEtUser();
-                 return true;
-              }
-           } else {
-              //$this->Form->AddError('ErrorCredentials');
-              return false;
-           }
+        try {
+            $result = vB_Api::instance('user')->login($loginName, $password);
+            if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                if ($result['userid']) {
+                    $newResult = vB_Api::instance('user')->fetchCurrentUserinfo();
+                    if ($newResult['userid']) {
+                        vB5_Cookie::set('cpsession', $result['cpsession'], 30);
+                        vB5_Cookie::set('sessionhash', $result['sessionhash'], 30);
+                        vB5_Cookie::set('password', $result['password'], 30);
+                        vB5_Cookie::set('userid', $result['userid'], 30);
+                        MbqMain::$oMbqAppEnv->currentUserInfo = $newResult;
+                        $this->initOCurMbqEtUser();
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
         }
     }
     
@@ -192,31 +173,28 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
      * @return  Boolean  return true when logout success.
      */
     public function logout() {
-        $oEntryController = new EntryController();
-        $oEntryController->Initialize();
-        /* modified from EntryController::SignOut() */
-        if (MbqMain::hasLogin()) {
-             $User = Gdn::Session()->User;
-             
-             $oEntryController->EventArguments['SignoutUser'] = $User;
-             $oEntryController->FireEvent("BeforeSignOut");
-             
-             // Sign the user right out.
-             Gdn::Session()->End();
-             
-             $oEntryController->EventArguments['SignoutUser'] = $User;
-             $oEntryController->FireEvent("SignOut");
+        $newResult = vB_Api::instance('user')->fetchCurrentUserinfo();
+        if ($newResult['userid']) {
+            try {
+                $result = vB_Api::instance('user')->logout($newResult['logouthash']);
+                if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (Exception $e) {
+                return false;
+            }
         }
-        $oEntryController->Leaving = FALSE;
-        return true;
+        return false;
     }
     
     /**
      * init current user obj if login
      */
     public function initOCurMbqEtUser() {
-        if (MbqMain::$oMbqAppEnv->oCurStdUser) {
-            MbqMain::$oCurMbqEtUser = $this->initOMbqEtUser(MbqMain::$oMbqAppEnv->oCurStdUser, array('case' => 'oStdUser'));
+        if (MbqMain::$oMbqAppEnv->currentUserInfo) {
+            MbqMain::$oCurMbqEtUser = $this->initOMbqEtUser(MbqMain::$oMbqAppEnv->currentUserInfo['userid'], array('case' => 'byUserId'));
         }
     }
   
