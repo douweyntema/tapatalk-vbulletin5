@@ -78,6 +78,8 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
         } elseif ($mbqOpt['case'] == 'byAuthor') {
             if ($mbqOpt['oMbqDataPage']) {
                 $oMbqDataPage = $mbqOpt['oMbqDataPage'];
+		        $top = vB_Api::instance('content_channel')->fetchTopLevelChannelIds();
+            	$search['channel'] = $top['forum'];
             	$search['authorid'] = $var->userId->oriValue;
             	$search['view'] = vB_Api_Search::FILTER_VIEW_TOPIC;
             	$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;

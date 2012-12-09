@@ -14,6 +14,19 @@ Class MbqAclEtForumPost extends MbqBaseAclEtForumPost {
     
     public function __construct() {
     }
+    
+    /**
+     * judge can get_user_reply_post
+     *
+     * @return  Boolean
+     */
+    public function canAclGetUserReplyPost() {
+        if (MbqMain::$oMbqConfig->getCfg('user.guest_okay')->oriValue == MbqBaseFdt::getFdt('MbqFdtConfig.user.guest_okay.range.support')) {
+            return true;
+        } else {
+            return MbqMain::hasLogin();
+        }
+    }
   
 }
 

@@ -34,6 +34,19 @@ Class MbqAclEtForumTopic extends MbqBaseAclEtForumTopic {
     public function canAclGetThread($oMbqEtForumTopic) {
         return true;
     }
+    
+    /**
+     * judge can get_user_topic
+     *
+     * @return  Boolean
+     */
+    public function canAclGetUserTopic() {
+        if (MbqMain::$oMbqConfig->getCfg('user.guest_okay')->oriValue == MbqBaseFdt::getFdt('MbqFdtConfig.user.guest_okay.range.support')) {
+            return true;
+        } else {
+            return MbqMain::hasLogin();
+        }
+    }
   
 }
 
