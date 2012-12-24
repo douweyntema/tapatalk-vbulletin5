@@ -29,6 +29,7 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
      * @param  Mixed  $var
      * @param  Array  $mbqOpt
      * $mbqOpt['case'] = 'byForum' means get data by forum obj.$var is the forum obj.
+     * $mbqOpt['case'] = 'subscribed' means get subscribed data.$var is the user id.
      * $mbqOpt['case'] = 'byArrTopicRecord' means get data by arrTopicRecord.$var is the arrTopicRecord.
      * $mbqOpt['case'] = 'byTopicIds' means get data by topic ids.$var is the ids.
      * $mbqOpt['case'] = 'byAuthor' means get data by author.$var is the MbqEtUser obj.
@@ -41,29 +42,30 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
             $oMbqEtForum = $var;
             if ($mbqOpt['oMbqDataPage']) {
                 $oMbqDataPage = $mbqOpt['oMbqDataPage'];
-            	$search = array("channel" => $var->forumId->oriValue);
-            	$search['view'] = vB_Api_Search::FILTER_VIEW_TOPIC;
-            	$search['depth'] = 1;
-            	if ($mbqOpt['notIncludeTop']) {
-            	    $search['exclude_sticky'] = true;
-            	} elseif ($mbqOpt['top']) {
-            	    $search['sticky_only'] = true;
-            	} else {
-            	    MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_NOT_ACHIEVE);
-            	}
-            	$search['sort']['lastcontent'] = 'desc';
-            	try {
-                	$result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
-                	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
-                    	$oMbqDataPage->totalNum = $result['totalRecords'];
-                    	$arrTopicRecord = $result['results'];
+                $search = array("channel" => $var->forumId->oriValue);
+                $search['view'] = vB_Api_Search::FILTER_VIEW_TOPIC;
+                //$search['depth'] = 1;
+                $search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
+                if ($mbqOpt['notIncludeTop']) {
+                    $search['exclude_sticky'] = true;
+                } elseif ($mbqOpt['top']) {
+                    $search['sticky_only'] = true;
+                } else {
+                    MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_NOT_ACHIEVE);
+                }
+                $search['sort']['lastcontent'] = 'desc';
+                try {
+                    $result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
+                    if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                        $oMbqDataPage->totalNum = $result['totalRecords'];
+                        $arrTopicRecord = $result['results'];
                     } else {
-                    	$oMbqDataPage->totalNum = 0;
-                    	$arrTopicRecord = array();
+                        $oMbqDataPage->totalNum = 0;
+                        $arrTopicRecord = array();
                     }
                 } catch (Exception $e) {
-                	$oMbqDataPage->totalNum = 0;
-                	$arrTopicRecord = array();
+                    $oMbqDataPage->totalNum = 0;
+                    $arrTopicRecord = array();
                 }
                 $nodeIds = array();
                 foreach ($arrTopicRecord as $topicRecord) {
@@ -75,27 +77,62 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
                 return $this->getObjsMbqEtForumTopic($nodeIds, $mbqOpt);
                 /* common end */
             }
+        } elseif ($mbqOpt['case'] == 'subscribed') {
+            if ($mbqOpt['oMbqDataPage']) {
+                $oMbqDataPage = $mbqOpt['oMbqDataPage'];
+                try {
+                    $result = vB_Api::instance('follow')->getFollowing(
+                        $var,
+                        vB_Api_Follow::FOLLOWTYPE_CONTENT,
+                        array(
+                            vB_Api_Follow::FOLLOWFILTERTYPE_SORT => vB_Api_Follow::FOLLOWFILTER_SORTALL,
+                            vB_Api_Follow::FOLLOWTYPE => vB_Api_Follow::FOLLOWTYPE_CONTENT,
+                        ),
+                        vB_Api::instanceInternal('contenttype')->fetchContentTypeClassFromId(vB_Api::instanceInternal('contenttype')->fetchContentTypeIdFromClass('Text')),
+                        array(
+                            'perpage' => $oMbqDataPage->numPerPage,
+                            'page' => $oMbqDataPage->curPage
+                        )
+                    );
+                    if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                        $ids = array();
+                        foreach ($result['results'] as $r) {
+                            $ids[] = $r['keyval'];
+                        }
+                        $oMbqDataPage->totalNum = $result['totalcount'];
+                    } else {
+                        MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . 'Load subscribed topic failed!');
+                    }
+                } catch (Exception $e) {
+                    MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . 'Load subscribed topic failed!');
+                }
+                /* common begin */
+                $mbqOpt['case'] = 'byTopicIds';
+                $mbqOpt['oMbqDataPage'] = $oMbqDataPage;
+                return $this->getObjsMbqEtForumTopic($ids, $mbqOpt);
+                /* common end */
+            }
         } elseif ($mbqOpt['case'] == 'byAuthor') {
             if ($mbqOpt['oMbqDataPage']) {
                 $oMbqDataPage = $mbqOpt['oMbqDataPage'];
-		        $top = vB_Api::instance('content_channel')->fetchTopLevelChannelIds();
-            	$search['channel'] = $top['forum'];
-            	$search['authorid'] = $var->userId->oriValue;
-            	$search['view'] = vB_Api_Search::FILTER_VIEW_TOPIC;
-            	$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
-            	$search['sort']['lastcontent'] = 'desc';
-            	try {
-                	$result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
-                	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
-                    	$oMbqDataPage->totalNum = $result['totalRecords'];
-                    	$arrTopicRecord = $result['results'];
+                $top = vB_Api::instance('content_channel')->fetchTopLevelChannelIds();
+                $search['channel'] = $top['forum'];
+                $search['authorid'] = $var->userId->oriValue;
+                $search['view'] = vB_Api_Search::FILTER_VIEW_TOPIC;
+                $search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
+                $search['sort']['lastcontent'] = 'desc';
+                try {
+                    $result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
+                    if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                        $oMbqDataPage->totalNum = $result['totalRecords'];
+                        $arrTopicRecord = $result['results'];
                     } else {
-                    	$oMbqDataPage->totalNum = 0;
-                    	$arrTopicRecord = array();
+                        $oMbqDataPage->totalNum = 0;
+                        $arrTopicRecord = array();
                     }
                 } catch (Exception $e) {
-                	$oMbqDataPage->totalNum = 0;
-                	$arrTopicRecord = array();
+                    $oMbqDataPage->totalNum = 0;
+                    $arrTopicRecord = array();
                 }
                 $nodeIds = array();
                 foreach ($arrTopicRecord as $topicRecord) {
@@ -108,15 +145,15 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
                 /* common end */
             }
         } elseif ($mbqOpt['case'] == 'byTopicIds') {
-        	try {
-            	$result = vB_Api::instanceInternal('node')->getFullContentforNodes($var);
-            	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
-                	$arrTopicRecord = $result;
+            try {
+                $result = vB_Api::instanceInternal('node')->getFullContentforNodes($var);
+                if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                    $arrTopicRecord = $result;
                 } else {
-                	$arrTopicRecord = array();
+                    $arrTopicRecord = array();
                 }
             } catch (Exception $e) {
-            	$arrTopicRecord = array();
+                $arrTopicRecord = array();
             }
             /* common begin */
             $mbqOpt['case'] = 'byArrTopicRecord';
@@ -174,7 +211,14 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
                 }
             }
             /* make other properties */
-            //...
+            $oMbqAclEtForumPost = MbqMain::$oClk->newObj('MbqAclEtForumPost');
+            foreach ($objsMbqEtForumTopic as &$oMbqEtForumTopic) {
+                if ($oMbqAclEtForumPost->canAclReplyPost($oMbqEtForumTopic)) {
+                    $oMbqEtForumTopic->canReply->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumTopic.canReply.range.yes'));
+                } else {
+                    $oMbqEtForumTopic->canReply->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumTopic.canReply.range.no'));
+                }
+            }
             if ($mbqOpt['oMbqDataPage']) {
                 $oMbqDataPage = $mbqOpt['oMbqDataPage'];
                 $oMbqDataPage->datas = $objsMbqEtForumTopic;
@@ -210,7 +254,22 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
             $oMbqEtForumTopic->postTime->setOriValue($var['content']['created']);
             $oMbqEtForumTopic->lastReplyTime->setOriValue($var['content']['lastcontent'] ? $var['content']['lastcontent'] : $var['content']['created']);
             $oMbqEtForumTopic->replyNumber->setOriValue($var['content']['startertotalcount'] - 1);
+            if (MbqMain::hasLogin()) {
+                //if ($var['content']['lastcontent'] > MbqMain::$oCurMbqEtUser->mbqBind['userRecord']['lastactivity']) {    //inaccurate
+                if ($var['content']['lastcontent'] > MbqMain::$oMbqAppEnv->currentUserInfo['lastactivity']) {
+                    $oMbqEtForumTopic->newPost->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumTopic.newPost.range.yes'));
+                } else {
+                    $oMbqEtForumTopic->newPost->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumTopic.newPost.range.no'));
+                }
+            } else {
+                $oMbqEtForumTopic->newPost->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumTopic.newPost.range.no'));
+            }
             $oMbqEtForumTopic->viewNumber->setOriValue(0);
+            if ($var['content']['approved']) {
+                $oMbqEtForumTopic->state->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumTopic.state.range.postOk'));
+            } else {
+                $oMbqEtForumTopic->state->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumTopic.state.range.postOkNeedModeration'));
+            }
             $oMbqEtForumTopic->mbqBind['topicRecord'] = $var;
             return $oMbqEtForumTopic;
         } elseif ($mbqOpt['case'] == 'byTopicId') {

@@ -43,6 +43,8 @@ Class MbqConfig extends MbqBaseConfig {
     public function calCfg() {
         parent::calCfg();
       /* calculate the final config */
+        $option = vB::getDatastore()->getValue('options');
+        $this->cfg['base']['sys_version']->setOriValue($option['templateversion']);
     }
     
 }

@@ -63,6 +63,7 @@ Class MbqRdEtForum extends MbqBaseRdEtForum {
      * @param  Mixed  $var
      * @param  Array  $mbqOpt
      * $mbqOpt['case'] = 'byForumIds' means get data by forum ids.$var is the ids.
+     * $mbqOpt['case'] = 'subscribed' means get subscribed data.$var is the user id.
      * @return  Array
      */
     public function getObjsMbqEtForum($var, $mbqOpt) {
@@ -76,6 +77,33 @@ Class MbqRdEtForum extends MbqBaseRdEtForum {
                 }
             }
             return $objsMbqEtForum;
+        } elseif ($mbqOpt['case'] == 'subscribed') {
+            try {
+                $result = vB_Api::instance('follow')->getFollowing(
+                    $var,
+                    vB_Api_Follow::FOLLOWTYPE_CHANNELS,
+                    array(
+                        vB_Api_Follow::FOLLOWFILTERTYPE_SORT => vB_Api_Follow::FOLLOWFILTER_SORTALL,
+                        vB_Api_Follow::FOLLOWTYPE => vB_Api_Follow::FOLLOWTYPE_CHANNELS,
+                        null,
+                        array(
+                            'perpage' => 10000,
+                            'page' => 1,
+                        )
+                    )
+                );
+                if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                    $ids = array();
+                    foreach ($result['results'] as $r) {
+                        $ids[] = $r['keyval'];
+                    }
+                } else {
+                    MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . 'Load subscribed forum failed!');
+                }
+            } catch (Exception $e) {
+                MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . 'Load subscribed forum failed!');
+            }
+            return $this->getObjsMbqEtForum($ids, array('case' => 'byForumIds'));
         }
         MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_UNKNOWN_CASE);
     }
@@ -116,6 +144,20 @@ Class MbqRdEtForum extends MbqBaseRdEtForum {
                         $oMbqEtForum->subOnly->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.subOnly.range.yes'));
                     }
                     $oMbqEtForum->mbqBind['channelRecord'] = $channelRecord;
+                    $arrNodeRecord = vB_Api::instance('node')->getFullContentforNodes(array($oMbqEtForum->forumId->oriValue));
+                    if (!MbqMain::$oMbqAppEnv->exttHasErrors($arrNodeRecord)) {
+                        if ($arrNodeRecord) {
+                            $oMbqEtForum->mbqBind['channelFullContent'] = $arrNodeRecord[0];
+                            $oMbqAclEtForumTopic = MbqMain::$oClk->newObj('MbqAclEtForumTopic');
+                            if ($oMbqAclEtForumTopic->canAclNewTopic($oMbqEtForum)) {
+                                $oMbqEtForum->canPost->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.canPost.range.yes'));
+                            } else {
+                                $oMbqEtForum->canPost->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.canPost.range.no'));
+                            }
+                        }
+                    } else {
+                        return false;
+                    }
                     return $oMbqEtForum;
                 } else {
                     return false;

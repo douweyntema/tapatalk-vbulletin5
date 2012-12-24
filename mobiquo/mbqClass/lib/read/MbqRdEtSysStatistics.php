@@ -22,6 +22,19 @@ Class MbqRdEtSysStatistics extends MbqBaseRdEtSysStatistics {
             break;
         }
     }
+    
+    /**
+     * init system statistics by condition
+     *
+     * @return  Object
+     */
+    public function initOMbqEtSysStatistics() {
+        $oMbqEtSysStatistics = MbqMain::$oClk->newObj('MbqEtSysStatistics');
+        $arr = vB_Api::instance('wol')->fetchCounts();
+        $oMbqEtSysStatistics->forumTotalOnline->setOriValue($arr['members'] + $arr['guests']);
+        $oMbqEtSysStatistics->forumGuestOnline->setOriValue($arr['guests']);
+        return $oMbqEtSysStatistics;
+    }
   
 }
 

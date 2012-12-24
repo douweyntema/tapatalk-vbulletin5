@@ -83,11 +83,13 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             /* common end */
         } elseif ($mbqOpt['case'] == 'byReplyUser') {
             if ($mbqOpt['oMbqDataPage']) {
+                $oMbqDataPage = $mbqOpt['oMbqDataPage'];
+                $top = vB_Api::instance('content_channel')->fetchTopLevelChannelIds();
+                $search['channel'] = $top['forum'];
             	$search['authorid'] = $var->userId->oriValue;
             	$search['contenttypeid'] = vB_Api::instanceInternal('contenttype')->fetchContentTypeIdFromClass('Text');
-            	$search['view'] = vB_Api_Search::FILTER_VIEW_CONVERSATION_THREAD;
             	$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
-	            $search['sort']['publishdate'] = 'asc';
+	            $search['sort']['publishdate'] = 'desc';
             	try {
                 	$result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
                 	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
@@ -179,7 +181,14 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             /* load objsMbqEtThank property and make related properties/flags */
             //
             /* make other properties */
-            //
+            $oMbqAclEtForumPost = MbqMain::$oClk->newObj('MbqAclEtForumPost');
+            foreach ($objsMbqEtForumPost as &$oMbqEtForumPost) {
+                if ($oMbqAclEtForumPost->canAclSaveRawPost($oMbqEtForumPost)) {
+                    $oMbqEtForumPost->canEdit->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumPost.canEdit.range.yes'));
+                } else {
+                    $oMbqEtForumPost->canEdit->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumPost.canEdit.range.no'));
+                }
+            }
             /* common end */
             if ($mbqOpt['oMbqDataPage']) {
                 $oMbqDataPage = $mbqOpt['oMbqDataPage'];
@@ -221,6 +230,11 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             $oMbqEtForumPost->postContent->setTmlDisplayValue($this->processContentForDisplay($macro, true, $oMbqEtForumPost));
             $oMbqEtForumPost->postContent->setTmlDisplayValueNoHtml($this->processContentForDisplay($macro, false, $oMbqEtForumPost));
             $oMbqEtForumPost->shortContent->setOriValue(MbqMain::$oMbqCm->getShortContent($oMbqEtForumPost->postContent->tmlDisplayValue));
+            if ($var['content']['approved']) {
+                $oMbqEtForumPost->state->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumPost.state.range.postOk'));
+            } else {
+                $oMbqEtForumPost->state->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumPost.state.range.postOkNeedModeration'));
+            }
             return $oMbqEtForumPost;
         } elseif ($mbqOpt['case'] == 'byPostId') {
             $objsMbqEtForumPost = $this->getObjsMbqEtForumPost(array($var), array('case' => 'byPostIds'));
@@ -252,17 +266,17 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
         $post = $content;
         if ($returnHtml) {
             if ($oMbqEtForumPost->mbqBind['bbcodeoptions']['allowsmilies']) {
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/biggrin.png" .*?smilieid=".*?".*? \/>/i', ':D', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/frown.png" .*?smilieid=".*?".*? \/>/i', ':(', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/mad.png" .*?smilieid=".*?".*? \/>/i', ':mad:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/tongue.png" .*?smilieid=".*?".*? \/>/i', ':p', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/redface.png" .*?smilieid=".*?".*? \/>/i', ':o', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/confused.png" .*?smilieid=".*?".*? \/>/i', ':confused:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/wink.png" .*?smilieid=".*?".*? \/>/i', ';)', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/smile.png" .*?smilieid=".*?".*? \/>/i', ':)', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/rolleyes.png" .*?smilieid=".*?".*? \/>/i', ':rolleyes:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/cool.png" .*?smilieid=".*?".*? \/>/i', ':cool:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/vb5\/core\/images\/smilies\/eek.png" .*?smilieid=".*?".*? \/>/i', ':eek:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/biggrin.png" .*?smilieid=".*?".*? \/>/i', ':D', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/frown.png" .*?smilieid=".*?".*? \/>/i', ':(', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/mad.png" .*?smilieid=".*?".*? \/>/i', ':mad:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/tongue.png" .*?smilieid=".*?".*? \/>/i', ':p', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/redface.png" .*?smilieid=".*?".*? \/>/i', ':o', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/confused.png" .*?smilieid=".*?".*? \/>/i', ':confused:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/wink.png" .*?smilieid=".*?".*? \/>/i', ';)', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/smile.png" .*?smilieid=".*?".*? \/>/i', ':)', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/rolleyes.png" .*?smilieid=".*?".*? \/>/i', ':rolleyes:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/cool.png" .*?smilieid=".*?".*? \/>/i', ':cool:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/eek.png" .*?smilieid=".*?".*? \/>/i', ':eek:', $post);
             } else {
             }
             if ($oMbqEtForumPost->mbqBind['bbcodeoptions']['allowbbcode']) {
@@ -299,16 +313,8 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
      * @return  String
      */
     public function getQuotePostContent($oMbqEtForumPost) {
-        /*
-        $content = preg_replace('/.*<a href="#tapatalkQuoteEnd"><\/a>/i', '', $oMbqEtForumPost->postContent->oriValue);
-        $userDisplayName = $oMbqEtForumPost->oAuthorMbqEtUser ? $oMbqEtForumPost->oAuthorMbqEtUser->getDisplayName() : '';
-        $ret = '<a href="#tapatalkQuoteBegin-'.$userDisplayName.'"><font color="gray"><b><u>'.$userDisplayName.' wrote:</u></b></font></a><br />';
-        $ret .= '<font color="gray"><i>'.trim($content).'</i></font>';
-        $ret .= '<a href="#tapatalkQuoteEnd"></a>';
-        */
-        $content = preg_replace('/.*<a href="#tapatalkQuoteEnd"><\/a>/is', '', $oMbqEtForumPost->postContent->oriValue);
-        $userDisplayName = $oMbqEtForumPost->oAuthorMbqEtUser ? $oMbqEtForumPost->oAuthorMbqEtUser->getDisplayName() : '';
-        $ret = "[quote=\"$userDisplayName\"]".trim($content)."[/quote]\n\n";
+        $oldContent = preg_replace('/\[quote.*?\].*?\[\/quote\]/is', '', $oMbqEtForumPost->postContent->oriValue);
+        $ret = '[QUOTE='.$oMbqEtForumPost->oAuthorMbqEtUser->getDisplayName().';'.$oMbqEtForumPost->postId->oriValue.']'.$oldContent.'[/QUOTE]';
         return $ret;
     }
     

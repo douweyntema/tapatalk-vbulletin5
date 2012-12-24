@@ -42,7 +42,7 @@ Class MbqWrEtForumTopic extends MbqBaseWrEtForumTopic {
             if (is_array($var)) {
                 MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_NOT_ACHIEVE);
             } else {
-                vB_Api::instance('node')->markRead($var->topicId->oriValue);
+                $result = vB_Api::instance('node')->markRead($var->topicId->oriValue);
             }
         }
     }
@@ -57,6 +57,30 @@ Class MbqWrEtForumTopic extends MbqBaseWrEtForumTopic {
             MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_NOT_ACHIEVE);
         } else {
             //do nothing
+        }
+    }
+    
+    /**
+     * add forum topic
+     *
+     * @param  Mixed  $var($oMbqEtForumTopic or $objsMbqEtForumTopic)
+     */
+    public function addMbqEtForumTopic(&$var) {
+        if (is_array($var)) {
+            MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_NOT_ACHIEVE);
+        } else {
+            $data['title'] = $var->topicTitle->oriValue;
+            $data['rawtext'] = $var->topicContent->oriValue;
+            $data['parentid'] = $var->forumId->oriValue;
+            $data['created'] = vB::getRequest()->getTimeNow();
+            $result = vB_Api::instance('content_text')->add($data);
+            if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                $var->topicId->setOriValue($result);
+            } else {
+                MbqError::alert('', "Can not save!", '', MBQ_ERR_APP);
+            }
+            $oMbqRdEtForumTopic = MbqMain::$oClk->newObj('MbqRdEtForumTopic');
+            $var = $oMbqRdEtForumTopic->initOMbqEtForumTopic($var->topicId->oriValue, array('case' => 'byTopicId'));    //for get state
         }
     }
   

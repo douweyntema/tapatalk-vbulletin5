@@ -47,6 +47,68 @@ Class MbqAclEtForumTopic extends MbqBaseAclEtForumTopic {
             return MbqMain::hasLogin();
         }
     }
+    
+    /**
+     * judge can new topic
+     *
+     * @param  Object  $oMbqEtForum
+     * @return  Boolean
+     */
+    public function canAclNewTopic($oMbqEtForum) {
+        if (MbqMain::hasLogin() && $oMbqEtForum->mbqBind['channelFullContent']['content']['createpermissions']['vbforum_text'] && $oMbqEtForum->mbqBind['channelFullContent']['content']['options']['cancontainthreads']) {
+            return true;
+        } 
+        return false;
+    }
+    
+    /**
+     * judge can get_unread_topic
+     *
+     * @return  Boolean
+     */
+    public function canAclGetUnreadTopic() {
+        return MbqMain::hasLogin();
+    }
+    
+    /**
+     * judge can get_participated_topic
+     *
+     * @return  Boolean
+     */
+    public function canAclGetParticipatedTopic() {
+        return MbqMain::hasLogin();
+    }
+    
+    /**
+     * judge can get_latest_topic
+     *
+     * @return  Boolean
+     */
+    public function canAclGetLatestTopic() {
+        return MbqMain::hasLogin();
+    }
+    
+    /**
+     * judge can search_topic
+     *
+     * @return  Boolean
+     */
+    public function canAclSearchTopic() {
+        if (MbqMain::$oMbqConfig->getCfg('forum.guest_search')->oriValue == MbqBaseFdt::getFdt('MbqFdtConfig.forum.guest_search.range.support')) {
+            return true;
+        } else {
+            return MbqMain::hasLogin();
+        }
+    }
+    
+    /**
+     * judge can get subscribed topic
+     *
+     * @return  Boolean
+     */
+    public function canAclGetSubscribedTopic() {
+        return MbqMain::hasLogin();
+    }
   
 }
 
