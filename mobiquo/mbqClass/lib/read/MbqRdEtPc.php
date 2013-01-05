@@ -22,6 +22,19 @@ Class MbqRdEtPc extends MbqBaseRdEtPc {
             break;
         }
     }
+    
+    /**
+     * get unread private conversations number
+     *
+     * @return  Integer
+     */
+    public function getUnreadPcNum() {
+        if (MbqMain::hasLogin()) {
+            return vB_Api::instanceInternal('content_privatemessage')->getUnreadInboxCount();
+        } else {
+            MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . 'Need login!');
+        }
+    }
   
 }
 

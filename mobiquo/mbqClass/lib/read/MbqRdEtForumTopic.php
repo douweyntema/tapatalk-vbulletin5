@@ -44,8 +44,8 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
                 $oMbqDataPage = $mbqOpt['oMbqDataPage'];
                 $search = array("channel" => $var->forumId->oriValue);
                 $search['view'] = vB_Api_Search::FILTER_VIEW_TOPIC;
-                //$search['depth'] = 1;
-                $search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
+                $search['depth'] = 1;
+                //$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
                 if ($mbqOpt['notIncludeTop']) {
                     $search['exclude_sticky'] = true;
                 } elseif ($mbqOpt['top']) {

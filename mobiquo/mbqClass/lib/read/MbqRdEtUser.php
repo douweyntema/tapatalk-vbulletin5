@@ -98,6 +98,9 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
             $oMbqEtUser->regTime->setOriValue($var['joindate']);
             $oMbqEtUser->lastActivityTime->setOriValue($var['lastactivity']);
             $oMbqEtUser->canWhosonline->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canWhosonline.range.yes'));
+            if (vB_Api::instanceInternal('content_privatemessage')->canUsePmSystem()) {
+                $oMbqEtUser->canPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canPm.range.yes'));
+            }
             $oMbqEtUser->mbqBind['userRecord'] = $var;
             return $oMbqEtUser;
         } elseif ($mbqOpt['case'] == 'byUserId') {
