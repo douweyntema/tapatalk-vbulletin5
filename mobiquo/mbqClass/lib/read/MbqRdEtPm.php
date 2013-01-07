@@ -65,10 +65,12 @@ Class MbqRdEtPm extends MbqBaseRdEtPm {
                     $oMbqEtPmBox = MbqMain::$oClk->newObj('MbqEtPmBox');
                     $oMbqEtPmBox->boxId->setOriValue($result['folderid']);
                     $oMbqEtPmBox->boxName->setOriValue($mbqOpt['displayTitle']);
-                    if ($result['title'] == 'messages' && $result['iscustom'] == 0) {   //inbox
+                    //if ($result['title'] == 'messages' && $result['iscustom'] == 0) {   //inbox
+                    if ($result['title'] == vB_Library_Content_Privatemessage::MESSAGE_FOLDER && $result['iscustom'] == 0) {   //inbox
                         $oMbqEtPmBox->boxType->setOriValue(MbqBaseFdt::getFdt('MbqFdtPm.MbqEtPmBox.boxType.range.inbox'));
                         $oMbqEtPmBox->unreadCount->setOriValue(vB_Api::instanceInternal('content_privatemessage')->getUnreadInboxCount());
-                    } elseif ($result['title'] == 'sent_items' && $result['iscustom'] == 0) {   //sent
+                    //} elseif ($result['title'] == 'sent_items' && $result['iscustom'] == 0) {   //sent
+                    } elseif ($result['title'] == vB_Library_Content_Privatemessage::SENT_FOLDER && $result['iscustom'] == 0) {   //sent
                         $oMbqEtPmBox->boxType->setOriValue(MbqBaseFdt::getFdt('MbqFdtPm.MbqEtPmBox.boxType.range.sent'));
                         $oMbqEtPmBox->unreadCount->setOriValue(0);
                     } elseif ($result['iscustom'] == 1) {   //custom

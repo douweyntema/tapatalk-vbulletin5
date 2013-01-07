@@ -250,9 +250,9 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
             $oMbqEtForumTopic->topicContent->setOriValue($var['content']['rawtext']);
             $oMbqEtForumTopic->shortContent->setOriValue(MbqMain::$oMbqCm->getShortContent($var['content']['rawtext']));
             $oMbqEtForumTopic->topicAuthorId->setOriValue($var['content']['starteruserid']);
-            $oMbqEtForumTopic->lastReplyAuthorId->setOriValue($var['content']['lastauthorid'] ? $var['content']['lastauthorid'] : $var['content']['starteruserid']);
+            $oMbqEtForumTopic->lastReplyAuthorId->setOriValue($var['content']['lastauthorid']);
             $oMbqEtForumTopic->postTime->setOriValue($var['content']['created']);
-            $oMbqEtForumTopic->lastReplyTime->setOriValue($var['content']['lastcontent'] ? $var['content']['lastcontent'] : $var['content']['created']);
+            $oMbqEtForumTopic->lastReplyTime->setOriValue($var['content']['lastcontent']);
             $oMbqEtForumTopic->replyNumber->setOriValue($var['content']['startertotalcount'] - 1);
             if (MbqMain::hasLogin()) {
                 //if ($var['content']['lastcontent'] > MbqMain::$oCurMbqEtUser->mbqBind['userRecord']['lastactivity']) {    //inaccurate

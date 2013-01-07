@@ -41,10 +41,10 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
                     if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
                         $arrUserRecord[] = $result;
                     } else {
-                        //
+                        MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not get user profile.");
                     }
                 } catch (Exception $e) {
-                    //
+                    MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not get user profile.");
                 }
             }
             $objsMbqEtUser = array();
@@ -62,10 +62,10 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
                     }
                     return $this->getObjsMbqEtUser($userIds, array('case' => 'byUserIds'));
                 } else {
-                    return array();
+                    MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not get online user.");
                 }
             } catch (Exception $e) {
-                return array();
+                MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not get online user.");
             }
         }
         MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_UNKNOWN_CASE);
@@ -114,7 +114,11 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
             try {
                 $result = vB_Api::instanceInternal('user')->fetchByUsername($var);
                 if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
-                    return $this->initOMbqEtUser($result['userid'], array('case' => 'byUserId'));
+                    if ($result) {
+                        return $this->initOMbqEtUser($result['userid'], array('case' => 'byUserId'));
+                    } else {
+                        return false;
+                    }
                 } else {
                     return false;
                 }
