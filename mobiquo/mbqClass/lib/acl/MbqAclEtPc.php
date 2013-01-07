@@ -32,6 +32,23 @@ Class MbqAclEtPc extends MbqBaseAclEtPc {
     public function canAclGetConversations() {
         return MbqMain::hasLogin();
     }
+    
+    /**
+     * judge can get_conversation
+     *
+     * @param  Object  $oMbqEtPc
+     * @return  Boolean
+     */
+    public function canAclGetConversation($oMbqEtPc) {
+        if (MbqMain::hasLogin()) {
+            foreach($oMbqEtPc->objsRecipientMbqEtUser as $oRecipientMbqEtUser) {
+               if ($oRecipientMbqEtUser->userId->oriValue == MbqMain::$oCurMbqEtUser->userId->oriValue) {
+                  return true;
+               }
+            }
+        }
+        return false;
+    }
   
 }
 

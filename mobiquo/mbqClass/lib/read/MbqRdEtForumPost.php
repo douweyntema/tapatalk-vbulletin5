@@ -252,10 +252,10 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
      *
      * @params  String  $content
      * @params  Boolean  $returnHtml
-     * @params  Object  $oMbqEtForumPost
+     * @params  Object  $obj($oMbqEtForumPost/$oMbqEtPcMsg)
      * @return  String
      */
-    public function processContentForDisplay($content, $returnHtml, $oMbqEtForumPost) {
+    public function processContentForDisplay($content, $returnHtml, $obj) {
         /*
         support bbcode:url/img/quote
         support html:br/i/b/u/font+color(red/blue)
@@ -265,7 +265,7 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
         */
         $post = $content;
         if ($returnHtml) {
-            if ($oMbqEtForumPost->mbqBind['bbcodeoptions']['allowsmilies']) {
+            if ($obj->mbqBind['bbcodeoptions']['allowsmilies']) {
             	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/biggrin.png" .*?smilieid=".*?".*? \/>/i', ':D', $post);
             	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/frown.png" .*?smilieid=".*?".*? \/>/i', ':(', $post);
             	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/mad.png" .*?smilieid=".*?".*? \/>/i', ':mad:', $post);
@@ -279,7 +279,7 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/eek.png" .*?smilieid=".*?".*? \/>/i', ':eek:', $post);
             } else {
             }
-            if ($oMbqEtForumPost->mbqBind['bbcodeoptions']['allowbbcode']) {
+            if ($obj->mbqBind['bbcodeoptions']['allowbbcode']) {
     	        $post = preg_replace_callback('/<font color=\"(\#.*?)\">(.*?)<\/font>/is', create_function('$matches','return MbqMain::$oMbqCm->mbColorConvert($matches[1], $matches[2]);'), $post);
             	$post = str_ireplace('<strong>', '<b>', $post);
             	$post = str_ireplace('</strong>', '</b>', $post);

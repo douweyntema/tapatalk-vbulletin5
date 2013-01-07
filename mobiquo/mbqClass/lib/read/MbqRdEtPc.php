@@ -102,7 +102,7 @@ Class MbqRdEtPc extends MbqBaseRdEtPc {
                         $oMbqEtPc = MbqMain::$oClk->newObj('MbqEtPc');
                         $oMbqEtPc->mbqBind['pcRecord'] = $pcRecord;
                         try {
-                            //$resultThread = vB_Api::instanceInternal('content_privatemessage')->getMessage($pcRecord['content']['nodeid']); //can mark read
+                            //$resultThread = vB_Api::instanceInternal('content_privatemessage')->getMessage($pcRecord['content']['nodeid']); //can cause mark read
                             $resultThread = $oExttMbqVbLibraryContentPrivatemessage->exttMbqGetMessage($pcRecord['content']['nodeid']);
                             if (!MbqMain::$oMbqAppEnv->exttHasErrors($resultThread)) {
                                 $oMbqEtPc->mbqBind['pcThread'] = $resultThread;
