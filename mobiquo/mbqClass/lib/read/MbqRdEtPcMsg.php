@@ -135,6 +135,18 @@ Class MbqRdEtPcMsg extends MbqBaseRdEtPcMsg {
         $oMbqRdEtForumPost = MbqMain::$oClk->newObj('MbqRdEtForumPost');
         return $oMbqRdEtForumPost->processContentForDisplay($content, $returnHtml, $oMbqEtPcMsg);
     }
+    
+    /**
+     * get_quote_conversation
+     *
+     * @param  Object  $oMbqEtPcMsg
+     * @return  Mixed
+     */
+    public function getQuoteConversation($oMbqEtPcMsg) {
+        $oldContent = preg_replace('/\[quote.*?\].*?\[\/quote\]/is', '', $oMbqEtPcMsg->msgContent->oriValue);
+        $ret = '[QUOTE='.$oMbqEtPcMsg->oAuthorMbqEtUser->getDisplayName().';'.$oMbqEtPcMsg->msgId->oriValue.']'.$oldContent.'[/QUOTE]';
+        return $ret;
+    }
   
 }
 

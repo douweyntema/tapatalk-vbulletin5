@@ -14,6 +14,55 @@ Class MbqWrEtPc extends MbqBaseWrEtPc {
     
     public function __construct() {
     }
+    
+    /**
+     * add private conversation
+     *
+     * @param  Object  $oMbqEtPc
+     */
+    public function addMbqEtPc(&$oMbqEtPc) {
+        try {
+            $result = vB_Api::instanceInternal('content_privatemessage')->add(
+                array(
+                    'msgRecipients' => implode(',', $oMbqEtPc->userNames->oriValue),
+                    'title' => $oMbqEtPc->convTitle->oriValue,
+                    'rawtext' => $oMbqEtPc->convContent->oriValue
+                )
+            );
+            if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                $oMbqEtPc->convId->setOriValue($result);
+            } else {
+                MbqError::alert('', "Can not save!", '', MBQ_ERR_APP);
+            }
+        } catch (Exception $e) {
+            MbqError::alert('', "Can not save!", '', MBQ_ERR_APP);
+        }
+    }
+    
+    /**
+     * delete conversation
+     *
+     * @param  Object  $oMbqEtPc
+     * @param  Integer  $mode
+     */
+    public function deleteConversation($oMbqEtPc, $mode) {
+        if ($mode == 1) {
+            try {
+                $result = vB_Api::instance('content_privatemessage')->toTrashcan($oMbqEtPc->convId->oriValue);
+                if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                    if (!$result) {
+                        MbqError::alert('', "Can not delete conversation!", '', MBQ_ERR_APP);
+                    }
+                } else {
+                    MbqError::alert('', "Can not delete conversation!", '', MBQ_ERR_APP);
+                }
+            } catch (Exception $e) {
+                MbqError::alert('', "Can not delete conversation!", '', MBQ_ERR_APP);
+            }
+        } else {
+            MbqError::alert('', "Need valid mode id!", '', MBQ_ERR_APP);
+        }
+    }
   
 }
 

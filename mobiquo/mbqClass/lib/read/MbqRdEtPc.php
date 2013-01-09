@@ -106,12 +106,13 @@ Class MbqRdEtPc extends MbqBaseRdEtPc {
                             $resultThread = $oExttMbqVbLibraryContentPrivatemessage->exttMbqGetMessage($pcRecord['content']['nodeid']);
                             if (!MbqMain::$oMbqAppEnv->exttHasErrors($resultThread)) {
                                 $oMbqEtPc->mbqBind['pcThread'] = $resultThread;
+                                $oMbqEtPc->mbqBind['participants'] = vB_Api::instanceInternal('content_privatemessage')->fetchParticipants($pcRecord['content']['nodeid']);
                                 $oMbqEtPc->convId->setOriValue($pcRecord['content']['nodeid']);
                                 $oMbqEtPc->convTitle->setOriValue($pcRecord['content']['title']);
                                 $oMbqEtPc->totalMessageNum->setOriValue($pcRecord['content']['startertotalcount']);
-                                $oMbqEtPc->participantCount->setOriValue(count($pcRecord['content']['recipients']) + 1);
-                                foreach ($pcRecord['content']['recipients'] as $recipient) {
-                                    $userIds[$recipient['userid']] = $recipient['userid'];
+                                $oMbqEtPc->participantCount->setOriValue($oMbqEtPc->mbqBind['participants']);
+                                foreach ($oMbqEtPc->mbqBind['participants'] as $participant) {
+                                    $userIds[$participant['userid']] = $participant['userid'];
                                 }
                                 $oMbqEtPc->startUserId->setOriValue($pcRecord['content']['starteruserid']);
                                 $userIds[$pcRecord['content']['starteruserid']] = $pcRecord['content']['starteruserid'];
@@ -147,8 +148,8 @@ Class MbqRdEtPc extends MbqBaseRdEtPc {
                     if ($oMbqEtPc->startUserId->oriValue == $oRecipientMbqEtUser->userId->oriValue) {
                         $oMbqEtPc->objsRecipientMbqEtUser[$oRecipientMbqEtUser->userId->oriValue] = $oRecipientMbqEtUser;
                     }
-                    foreach ($oMbqEtPc->mbqBind['pcRecord']['content']['recipients'] as $recipient) {
-                        if ($recipient['userid'] == $oRecipientMbqEtUser->userId->oriValue) {
+                    foreach ($oMbqEtPc->mbqBind['participants'] as $participant) {
+                        if ($participant['userid'] == $oRecipientMbqEtUser->userId->oriValue) {
                             $oMbqEtPc->objsRecipientMbqEtUser[$oRecipientMbqEtUser->userId->oriValue] = $oRecipientMbqEtUser;
                         }
                     }

@@ -100,6 +100,7 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
             $oMbqEtUser->canWhosonline->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canWhosonline.range.yes'));
             if (vB_Api::instanceInternal('content_privatemessage')->canUsePmSystem()) {
                 $oMbqEtUser->canPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canPm.range.yes'));
+                $oMbqEtUser->canSendPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canSendPm.range.yes'));
             }
             $oMbqEtUser->mbqBind['userRecord'] = $var;
             return $oMbqEtUser;

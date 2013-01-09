@@ -14,6 +14,35 @@ Class MbqAclEtPcMsg extends MbqBaseAclEtPcMsg {
     
     public function __construct() {
     }
+    
+    /**
+     * judge can reply_conversation
+     *
+     * @param  Object  $oMbqEtPcMsg
+     * @param  Obejct  $oMbqEtPc
+     * @return  Boolean
+     */
+    public function canAclReplyConversation($oMbqEtPcMsg, $oMbqEtPc) {
+        if (MbqMain::hasLogin() && (strlen(trim($oMbqEtPcMsg->msgContent->oriValue)) > 0) && ($oMbqEtPcMsg->convId->oriValue == $oMbqEtPc->convId->oriValue)) {
+            foreach ($oMbqEtPc->objsRecipientMbqEtUser as $oRecipientMbqEtUser) {
+                if ($oRecipientMbqEtUser->userId->oriValue == MbqMain::$oCurMbqEtUser->userId->oriValue) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * judge can get_quote_conversation
+     *
+     * @param  Object  $oMbqEtPcMsg
+     * @param  Obejct  $oMbqEtPc
+     * @return  Boolean
+     */
+    public function canAclGetQuoteConversation($oMbqEtPcMsg, $oMbqEtPc) {
+        return $this->canAclReplyConversation($oMbqEtPcMsg, $oMbqEtPc);
+    }
   
 }
 
