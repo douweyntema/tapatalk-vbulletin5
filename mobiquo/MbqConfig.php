@@ -45,6 +45,9 @@ Class MbqConfig extends MbqBaseConfig {
       /* calculate the final config */
         $option = vB::getDatastore()->getValue('options');
         $this->cfg['base']['sys_version']->setOriValue($option['templateversion']);
+        if ($option['tapatalk_guest_okay']) {
+            $this->cfg['user']['guest_okay']->setOriValue(MbqBaseFdt::getFdt('MbqFdtConfig.user.guest_okay.range.support'));
+        }
     }
     
 }

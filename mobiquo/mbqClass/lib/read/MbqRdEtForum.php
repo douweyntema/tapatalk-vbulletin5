@@ -34,7 +34,7 @@ Class MbqRdEtForum extends MbqBaseRdEtForum {
         $newTree = array();
         foreach ($channelNodesTree as $channelNode) {
             $id = $channelNode['nodeid'];
-            if ($oNewMbqEtForum = $this->initOMbqEtForum($channelNode, array('case' => 'channelNode'))) {
+            if (!in_array($id, MbqMain::$oMbqAppEnv->hideForumIds) && ($oNewMbqEtForum = $this->initOMbqEtForum($channelNode, array('case' => 'channelNode')))) {
                 $newTree [$id] = $oNewMbqEtForum;
                 $this->exttRecurInitObjsSubMbqEtForum($newTree[$id], $channelNode['subchannels']);
             }
@@ -50,7 +50,7 @@ Class MbqRdEtForum extends MbqBaseRdEtForum {
     private function exttRecurInitObjsSubMbqEtForum(&$oMbqEtForum, $arr) {
         foreach ($arr as $channelNode) {
             $id = $channelNode['nodeid'];
-            if ($oNewMbqEtForum = $this->initOMbqEtForum($channelNode, array('case' => 'channelNode'))) {
+            if (!in_array($id, MbqMain::$oMbqAppEnv->hideForumIds) && ($oNewMbqEtForum = $this->initOMbqEtForum($channelNode, array('case' => 'channelNode')))) {
                 $oMbqEtForum->objsSubMbqEtForum[$id] = $oNewMbqEtForum;
                 $this->exttRecurInitObjsSubMbqEtForum($oMbqEtForum->objsSubMbqEtForum[$id], $channelNode['subchannels']);
             }

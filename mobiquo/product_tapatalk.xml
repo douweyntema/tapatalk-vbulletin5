@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<product productid="tapatalk" active="1">
+	<title>Tapatalk</title>
+	<description>Tapatalk mobile app plugin for vb5 beta.</description>
+	<version>5.0 beta</version>
+	<url>http://tapatalk.com</url>
+	<versioncheckurl>http://tapatalk.com/vb5.php</versioncheckurl>
+	<dependencies>
+	</dependencies>
+	<codes>
+	</codes>
+	<templates>
+		<template name="tapatalk_detect_js" templatetype="template" date="1358072599" username="admin" version="5.0 beta"><![CDATA[<!--
+<script type="text/javascript">alert('{vb:raw vboptions.tapatalk_directory}');</script>
+-->]]></template>
+	</templates>
+	<stylevardfns>
+	</stylevardfns>
+	<stylevars>
+	</stylevars>
+	<hooks>
+	</hooks>
+	<phrases>
+		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
+			<phrase name="setting_tapatalk_directory_desc" date="1359287212" username="admin" version="5.0 beta"><![CDATA[Advanced Use Only. Change it only if you did rename the Tapatalk plugin directory. And the default value is 'mobiquo'.
+If you have installed Tapatalk plugin in different directory, you will also need to apply the same settings in Tapatalk Forum Owner Area at http://tapatalk.com/forum_owner.php]]></phrase>
+			<phrase name="setting_tapatalk_directory_title" date="1359287212" username="admin" version="5.0 beta"><![CDATA[Tapatalk Plugin Directory]]></phrase>
+			<phrase name="setting_tapatalk_guest_okay_desc" date="1359287185" username="admin" version="5.0 beta"><![CDATA[Allow non-registered users to access your forum via Tapatalk.]]></phrase>
+			<phrase name="setting_tapatalk_guest_okay_title" date="1359287185" username="admin" version="5.0 beta"><![CDATA[Guest Access]]></phrase>
+			<phrase name="setting_tapatalk_hide_forum_desc" date="1359287844" username="admin" version="5.0 beta"><![CDATA[Optional. Choose the sub-forums you want to hide from Tapatalk.]]></phrase>
+			<phrase name="setting_tapatalk_hide_forum_title" date="1359287844" username="admin" version="5.0 beta"><![CDATA[Hide Sub-forums from Tapatalk]]></phrase>
+			<phrase name="settinggroup_tapatalk" date="1358068733" username="admin" version="5.0 beta"><![CDATA[Tapatalk Options]]></phrase>
+		</phrasetype>
+	</phrases>
+	<options>
+		<settinggroup name="tapatalk" displayorder="0">
+			<setting varname="tapatalk_guest_okay" displayorder="1">
+				<datatype>boolean</datatype>
+				<optioncode>yesno</optioncode>
+				<defaultvalue>1</defaultvalue>
+				<public>1</public>
+			</setting>
+			<setting varname="tapatalk_hide_forum" displayorder="2">
+				<datatype>free</datatype>
+				<optioncode>forums:none</optioncode>
+				<public>1</public>
+			</setting>
+			<setting varname="tapatalk_directory" displayorder="4">
+				<datatype>free</datatype>
+				<defaultvalue>mobiquo</defaultvalue>
+				<public>1</public>
+			</setting>
+		</settinggroup>
+	</options>
+	<helptopics>
+	</helptopics>
+	<cronentries>
+	</cronentries>
+	<faqentries>
+	</faqentries>
+	<widgets>
+	</widgets>
+</product>

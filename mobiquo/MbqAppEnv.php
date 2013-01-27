@@ -14,6 +14,7 @@ Class MbqAppEnv extends MbqBaseAppEnv {
     public $rootUrl;    /* site root url */
     public $baseUrlCore;
     public $currentUserInfo;
+    public $hideForumIds;
     
     public function __construct() {
         parent::__construct();
@@ -36,6 +37,16 @@ Class MbqAppEnv extends MbqBaseAppEnv {
                 $oMbqRdEtUser->initOCurMbqEtUser();
             }
         }
+        $products = vB::getDatastore()->getValue('products');
+        if ($products['vbulletin']) {
+            if (!$products['tapatalk']) {
+                MbqError::alert('', 'Sorry!You need enable tapatalk first!');
+            }
+        } else {
+            MbqError::alert('', 'Sorry!You need enable vbulletin first!');
+        }
+        $option = vB::getDatastore()->getValue('options');
+        $this->hideForumIds = unserialize($option['tapatalk_hide_forum']);
         @ ob_end_clean();
     }
     
