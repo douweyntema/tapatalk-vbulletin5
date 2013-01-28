@@ -266,17 +266,17 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
         $post = $content;
         if ($returnHtml) {
             if ($obj->mbqBind['bbcodeoptions']['allowsmilies']) {
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/biggrin.png" .*?smilieid=".*?".*? \/>/i', ':D', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/frown.png" .*?smilieid=".*?".*? \/>/i', ':(', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/mad.png" .*?smilieid=".*?".*? \/>/i', ':mad:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/tongue.png" .*?smilieid=".*?".*? \/>/i', ':p', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/redface.png" .*?smilieid=".*?".*? \/>/i', ':o', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/confused.png" .*?smilieid=".*?".*? \/>/i', ':confused:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/wink.png" .*?smilieid=".*?".*? \/>/i', ';)', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/smile.png" .*?smilieid=".*?".*? \/>/i', ':)', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/rolleyes.png" .*?smilieid=".*?".*? \/>/i', ':rolleyes:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/cool.png" .*?smilieid=".*?".*? \/>/i', ':cool:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/eek.png" .*?smilieid=".*?".*? \/>/i', ':eek:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/biggrin.png".*?\/>/i', ':D', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/frown.png".*?\/>/i', ':(', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/mad.png".*?\/>/i', ':mad:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/tongue.png".*?\/>/i', ':p', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/redface.png".*?\/>/i', ':o', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/confused.png".*?\/>/i', ':confused:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/wink.png".*?\/>/i', ';)', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/smile.png".*?\/>/i', ':)', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/rolleyes.png".*?\/>/i', ':rolleyes:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/cool.png".*?\/>/i', ':cool:', $post);
+            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/eek.png".*?\/>/i', ':eek:', $post);
             } else {
             }
             if ($obj->mbqBind['bbcodeoptions']['allowbbcode']) {
@@ -286,8 +286,11 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
     	        $post = preg_replace('/<img .*?src="(.*?)" .*?\/>/i', '[img]$1[/img]', $post);
     	        $post = preg_replace('/<a .*?href="mailto:(.*?)".*?>(.*?)<\/a>/i', '[url=$1]$2[/url]', $post);
     	        $post = preg_replace('/<a .*?href="(.*?)".*?>(.*?)<\/a>/i', '[url=$1]$2[/url]', $post);
-    	        //todo quote/code/html/php
-    	        
+    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_quote">.*?<div class="quote_container">.*?<div class="bbcode_quote_container"><\/div>(.*?)<\/div>.*?<\/div>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //quote
+    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_description">Code\:<\/div>.*?<pre class="bbcode_code".*?>(.*?)<\/pre>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //code
+    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_description">HTML Code\:<\/div>.*?<pre class="bbcode_code".*?>(.*?)<\/pre>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //html
+    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_description">PHP Code\:<\/div>.*?<div class="bbcode_code".*?><code><code>(.*?)<\/code><\/code><\/div>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //php
+    	        //MbqCm::writeLog($post);MbqError::alert('', 'ee');
     	        $post = preg_replace('/<object .*?>.*?<embed src="(.*?)".*?><\/embed><\/object>/is', '[url=$1]$1[/url]', $post); /* for youtube content etc. */
                 $post = str_ireplace('<hr />', '<br />____________________________________<br />', $post);
         	    $post = str_ireplace('<li>', "\t\t<li>", $post);
@@ -316,20 +319,6 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
         $oldContent = preg_replace('/\[quote.*?\].*?\[\/quote\]/is', '', $oMbqEtForumPost->postContent->oriValue);
         $ret = '[QUOTE='.$oMbqEtForumPost->oAuthorMbqEtUser->getDisplayName().';'.$oMbqEtForumPost->postId->oriValue.']'.$oldContent.'[/QUOTE]';
         return $ret;
-    }
-    
-    /**
-     * return raw post content
-     *
-     * @param  Object  $oMbqEtForumPost
-     * @return  String
-     */
-    public function getRawPostContent($oMbqEtForumPost) {
-        //need convert quote html code to bbcode quote
-        $content = $oMbqEtForumPost->postContent->oriValue;
-    	$content = preg_replace('/<a .*?href="#tapatalkQuoteBegin-(.*?)">.*?<\/a>/i', '[quote="$1"]', $content);
-    	$content = preg_replace('/<a .*?href="#tapatalkQuoteEnd"><\/a>/i', '[/quote]', $content);
-    	return $content;
     }
   
 }
