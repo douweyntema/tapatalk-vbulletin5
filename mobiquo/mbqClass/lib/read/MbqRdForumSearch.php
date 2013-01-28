@@ -34,6 +34,7 @@ Class MbqRdForumSearch extends MbqBaseRdForumSearch {
             	$search['contenttypeid'] = vB_Api::instanceInternal('contenttype')->fetchContentTypeIdFromClass('Text');
             	$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
 	            $search['sort']['publishdate'] = 'desc';
+            	$search['exclude'] = MbqMain::$oMbqAppEnv->hideForumIds;
                 try {
                     $result = vB_Api::instanceInternal('search')->getInitialResults($search, 100000, 1, true);
                     if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
@@ -69,6 +70,7 @@ Class MbqRdForumSearch extends MbqBaseRdForumSearch {
                 $search['view'] = vB_Api_Search::FILTER_VIEW_TOPIC;
                 $search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
                 $search['sort']['lastcontent'] = 'desc';
+                $search['exclude'] = MbqMain::$oMbqAppEnv->hideForumIds;
                 try {
                     $result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
                     if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
@@ -102,6 +104,7 @@ Class MbqRdForumSearch extends MbqBaseRdForumSearch {
         	$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
             $search['sort']['publishdate'] = 'desc';
             $search['keywords'] = $filter['keywords'];
+            $search['exclude'] = MbqMain::$oMbqAppEnv->hideForumIds;
             try {
                 $result = vB_Api::instanceInternal('search')->getInitialResults($search, 100000, 1, true);
                 if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
@@ -139,6 +142,7 @@ Class MbqRdForumSearch extends MbqBaseRdForumSearch {
         	$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
             $search['sort']['publishdate'] = 'desc';
             $search['keywords'] = $filter['keywords'];
+            $search['exclude'] = MbqMain::$oMbqAppEnv->hideForumIds;
         	try {
             	$result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
             	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
