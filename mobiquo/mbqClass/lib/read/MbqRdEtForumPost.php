@@ -30,7 +30,7 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
      * @param  Array  $mbqOpt
      * $mbqOpt['case'] = 'byTopic' means get data by forum topic obj.$var is the forum topic obj.
      * $mbqOpt['case'] = 'byPostIds' means get data by post ids.$var is the ids.
-     * $mbqOpt['case'] = 'byArrPostRecord' means get data by byArrPostRecord.$var is the byArrPostRecord.
+     * $mbqOpt['case'] = 'byArrPostRecord' means get data by byArrPostRecord.$var is the arrPostRecord.
      * $mbqOpt['case'] = 'byReplyUser' means get data by reply user.$var is the MbqEtUser obj.
      * @return  Mixed
      */
