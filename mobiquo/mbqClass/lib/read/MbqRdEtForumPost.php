@@ -38,6 +38,7 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
         if ($mbqOpt['case'] == 'byTopic') {
             $oMbqEtForumTopic = $var;
             if ($mbqOpt['oMbqDataPage']) {
+                $oMbqDataPage = $mbqOpt['oMbqDataPage'];
             	$search['channel'] = $oMbqEtForumTopic->topicId->oriValue;
             	$search['contenttypeid'] = vB_Api::instanceInternal('contenttype')->fetchContentTypeIdFromClass('Text');
             	$search['view'] = vB_Api_Search::FILTER_VIEW_CONVERSATION_THREAD;
