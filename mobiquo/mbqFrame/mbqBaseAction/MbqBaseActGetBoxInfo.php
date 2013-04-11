@@ -21,7 +21,7 @@ Abstract Class MbqBaseActGetBoxInfo extends MbqBaseAct {
         if (MbqMain::$oMbqConfig->moduleIsEnable('pm')) {
         } else {
             MbqError::alert('', "Not support module private message!", '', MBQ_ERR_NOT_SUPPORT);
-        }
+        }        
         $oMbqAclEtPm = MbqMain::$oClk->newObj('MbqAclEtPm');
         if ($oMbqAclEtPm->canAclGetBoxInfo()) {    //acl judge
             $oMbqRdEtPm = MbqMain::$oClk->newObj('MbqRdEtPm');

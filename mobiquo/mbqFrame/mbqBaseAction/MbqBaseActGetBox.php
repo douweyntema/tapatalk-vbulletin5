@@ -21,7 +21,7 @@ Abstract Class MbqBaseActGetBox extends MbqBaseAct {
         if (MbqMain::$oMbqConfig->moduleIsEnable('pm')) {
         } else {
             MbqError::alert('', "Not support module private message!", '', MBQ_ERR_NOT_SUPPORT);
-        }
+        }        
         $boxId = MbqMain::$input[0];
         $startNum = (int) MbqMain::$input[1];
         $lastNum = (int) MbqMain::$input[2];
