@@ -118,6 +118,11 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
                 $oMbqEtUser->canPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canPm.range.yes'));
                 $oMbqEtUser->canSendPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canSendPm.range.yes'));
             }
+            $oMbqEtUser->maxAttachment->setOriValue(MbqMain::$oMbqAppEnv->exttOptions['maximages']);
+            $oMbqEtUser->maxPngSize->setOriValue(MbqMain::$oMbqAppEnv->exttAttachmentcache['png']['size']);
+            $jpgMaxSize = MbqMain::$oMbqAppEnv->exttAttachmentcache['jpg']['size'];
+            $jpegMaxSize = MbqMain::$oMbqAppEnv->exttAttachmentcache['jpeg']['size'];
+            $oMbqEtUser->maxJpgSize->setOriValue($jpgMaxSize > $jpegMaxSize ? $jpgMaxSize : $jpegMaxSize);
             $oMbqEtUser->mbqBind['userRecord'] = $var;
             return $oMbqEtUser;
         } elseif ($mbqOpt['case'] == 'byUserId') {

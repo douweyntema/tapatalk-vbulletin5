@@ -89,12 +89,23 @@ Class MbqCm extends MbqBaseCm {
      * @return  Array
      */
     public function getAttIdsFromContent($content) {
-        preg_match_all('/\[ATTACH=CONFIG\]n(.*?)\[\/ATTACH\]/i', $content, $mat);
+        preg_match_all('/\[ATTACH=CONFIG\]n([^\[]*?)\[\/ATTACH\]/i', $content, $mat);
         if ($mat[1]) {
             return $mat[1];
         } else {
             return array();
         }
+    }
+    
+    /**
+     * convert app attachment bbcode to vb5 native code
+     *
+     * @param  String  $content
+     * @return  String
+     */
+    public function exttConvertAppAttBbcodeToNativeCode($content) {
+        $content = preg_replace('/\[ATTACH\]([^\[]*?)\[\/ATTACH\]/i', '[ATTACH=CONFIG]n$1[/ATTACH]', $content);
+        return $content;
     }
     
 }

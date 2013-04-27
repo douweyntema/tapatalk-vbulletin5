@@ -70,17 +70,41 @@ Class MbqWrEtForumTopic extends MbqBaseWrEtForumTopic {
             MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_NOT_ACHIEVE);
         } else {
             $data['title'] = $var->topicTitle->oriValue;
-            $data['rawtext'] = $var->topicContent->oriValue;
+            //$data['rawtext'] = $var->topicContent->oriValue;
+            $data['rawtext'] = MbqMain::$oMbqCm->exttConvertAppAttBbcodeToNativeCode($var->topicContent->oriValue);     //attention!!!
             $data['parentid'] = $var->forumId->oriValue;
             $data['created'] = vB::getRequest()->getTimeNow();
-            $result = vB_Api::instance('content_text')->add($data);
-            if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
-                $var->topicId->setOriValue($result);
-            } else {
-                MbqError::alert('', "Can not save!", '', MBQ_ERR_APP);
+            try {
+                $result = vB_Api::instance('content_text')->add($data);
+                if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                    $var->topicId->setOriValue($result);
+                    //handle atts start,ref vB5_Frontend_Controller_CreateContent::index()
+                    $attIds = MbqMain::$oMbqCm->getAttIdsFromContent($data['rawtext']);
+                    if ($attIds) {
+                        foreach ($attIds as $attId) {
+                            $attData = array(
+                                'filedataid' => $attId,
+                                'filename' => 'ImageUploadedByTapatalk'.microtime(true).'.tmp'  //TODO:now only use a temp file name
+                            );
+                            try {
+                                $resultAtt = vB_Api::instance('node')->addAttachment($var->topicId->oriValue, $attData);    //
+                                if (MbqMain::$oMbqAppEnv->exttHasErrors($resultAtt)) {
+                                    MbqError::alert('', "Can not save attachment info!", '', MBQ_ERR_APP);
+                                }
+                            } catch (Exception $e) {
+                            	MbqError::alert('', "Can not save attachment info!", '', MBQ_ERR_APP);
+                            }
+                        }
+                    }
+                    //handle atts end
+                } else {
+                    MbqError::alert('', "Can not save!Content too short or please post later.", '', MBQ_ERR_APP);
+                }
+                $oMbqRdEtForumTopic = MbqMain::$oClk->newObj('MbqRdEtForumTopic');
+                $var = $oMbqRdEtForumTopic->initOMbqEtForumTopic($var->topicId->oriValue, array('case' => 'byTopicId'));    //for get state
+            } catch (Exception $e) {
+            	MbqError::alert('', "Can not save!Content too short or please post later.", '', MBQ_ERR_APP);
             }
-            $oMbqRdEtForumTopic = MbqMain::$oClk->newObj('MbqRdEtForumTopic');
-            $var = $oMbqRdEtForumTopic->initOMbqEtForumTopic($var->topicId->oriValue, array('case' => 'byTopicId'));    //for get state
         }
     }
   

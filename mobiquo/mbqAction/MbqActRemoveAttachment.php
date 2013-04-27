@@ -20,7 +20,11 @@ Class MbqActRemoveAttachment extends MbqBaseActRemoveAttachment {
      * action implement
      */
     public function actionImplement() {
-        parent::actionImplement();
+        if (!MbqMain::$oMbqConfig->moduleIsEnable('forum')) {
+            MbqError::alert('', "Not support module forum!", '', MBQ_ERR_NOT_SUPPORT);
+        }
+        //this is a dummy method,only used for remove the attachment bbcode in app
+        $this->data['result'] = true;
     }
   
 }

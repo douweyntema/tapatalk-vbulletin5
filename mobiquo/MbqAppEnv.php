@@ -15,6 +15,8 @@ Class MbqAppEnv extends MbqBaseAppEnv {
     public $baseUrlCore;
     public $currentUserInfo;
     public $hideForumIds;
+    public $exttOptions;
+    public $exttAttachmentcache;
     
     public function __construct() {
         parent::__construct();
@@ -47,6 +49,8 @@ Class MbqAppEnv extends MbqBaseAppEnv {
         }
         $option = vB::getDatastore()->getValue('options');
         $this->hideForumIds = unserialize($option['tapatalk_hide_forum']);
+        $this->exttOptions = vB::getDatastore()->getValue('options');
+        $this->exttAttachmentcache = vB::getDatastore()->getValue('attachmentcache');
         @ ob_end_clean();
     }
     

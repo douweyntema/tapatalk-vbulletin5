@@ -32,10 +32,10 @@ Class MbqWrEtPc extends MbqBaseWrEtPc {
             if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
                 $oMbqEtPc->convId->setOriValue($result);
             } else {
-                MbqError::alert('', "Can not save!", '', MBQ_ERR_APP);
+                MbqError::alert('', "Can not save!Content too short or please post later.", '', MBQ_ERR_APP);
             }
         } catch (Exception $e) {
-            MbqError::alert('', "Can not save!", '', MBQ_ERR_APP);
+            MbqError::alert('', "Can not save!Content too short or please post later.", '', MBQ_ERR_APP);
         }
     }
     

@@ -55,7 +55,8 @@ Class MbqAclEtForumTopic extends MbqBaseAclEtForumTopic {
      * @return  Boolean
      */
     public function canAclNewTopic($oMbqEtForum) {
-        if (MbqMain::hasLogin() && $oMbqEtForum->mbqBind['channelFullContent']['content']['createpermissions']['vbforum_text'] && $oMbqEtForum->mbqBind['channelFullContent']['content']['options']['cancontainthreads']) {
+        //if (MbqMain::hasLogin() && $oMbqEtForum->mbqBind['channelFullContent']['content']['createpermissions']['vbforum_text'] && $oMbqEtForum->mbqBind['channelFullContent']['content']['options']['cancontainthreads']) {
+        if (MbqMain::hasLogin() && $oMbqEtForum->mbqBind['channelFullContent']['content']['createpermissions']['vbforum_text'] && !$oMbqEtForum->mbqBind['channelRecord']['category']) {
             return true;
         } 
         return false;

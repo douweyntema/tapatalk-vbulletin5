@@ -138,10 +138,10 @@ Class MbqRdEtForum extends MbqBaseRdEtForum {
                     $oMbqEtForum->description->setOriValue($channelRecord['description']);
                     $oMbqEtForum->totalTopicNum->setOriValue($channelRecord['textcount']);
                     $oMbqEtForum->parentId->setOriValue($channelRecord['parentid']);
-                    if ($channelRecord['options']['cancontainthreads']) {
-                        $oMbqEtForum->subOnly->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.subOnly.range.no'));
-                    } else {
+                    if ($channelRecord['category']) {
                         $oMbqEtForum->subOnly->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.subOnly.range.yes'));
+                    } else {
+                        $oMbqEtForum->subOnly->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.subOnly.range.no'));
                     }
                     $oMbqEtForum->mbqBind['channelRecord'] = $channelRecord;
                     $arrNodeRecord = vB_Api::instance('node')->getFullContentforNodes(array($oMbqEtForum->forumId->oriValue));
@@ -153,6 +153,11 @@ Class MbqRdEtForum extends MbqBaseRdEtForum {
                                 $oMbqEtForum->canPost->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.canPost.range.yes'));
                             } else {
                                 $oMbqEtForum->canPost->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.canPost.range.no'));
+                            }
+                            if ($oMbqEtForum->mbqBind['channelFullContent']['content']['createpermissions']['vbforum_attach']) {
+                                $oMbqEtForum->canUpload->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.canUpload.range.yes'));
+                            } else {
+                                $oMbqEtForum->canUpload->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForum.canUpload.range.no'));
                             }
                         }
                     } else {

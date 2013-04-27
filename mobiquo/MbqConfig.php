@@ -43,10 +43,14 @@ Class MbqConfig extends MbqBaseConfig {
     public function calCfg() {
         parent::calCfg();
       /* calculate the final config */
-        $option = vB::getDatastore()->getValue('options');
-        $this->cfg['base']['sys_version']->setOriValue($option['templateversion']);
-        if ($option['tapatalk_guest_okay']) {
+        $options = MbqMain::$oMbqAppEnv->exttOptions;
+        $this->cfg['base']['sys_version']->setOriValue($options['templateversion']);
+        if ($options['tapatalk_guest_okay']) {
             $this->cfg['user']['guest_okay']->setOriValue(MbqBaseFdt::getFdt('MbqFdtConfig.user.guest_okay.range.support'));
+        }
+        $this->cfg['user']['reg_url']->setOriValue('register');
+        if ($this->moduleIsEnable('forum')) {
+            $this->cfg['forum']['max_attachment']->setOriValue($options['maximages']);
         }
     }
     

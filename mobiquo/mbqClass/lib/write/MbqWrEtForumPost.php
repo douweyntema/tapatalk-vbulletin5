@@ -25,14 +25,34 @@ Class MbqWrEtForumPost extends MbqBaseWrEtForumPost {
             MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . MBQ_ERR_INFO_NOT_ACHIEVE);
         } else {
             $data['title'] = '(Untitled)';
-            $data['rawtext'] = $var->postContent->oriValue;
+            //$data['rawtext'] = $var->postContent->oriValue;
+            $data['rawtext'] = MbqMain::$oMbqCm->exttConvertAppAttBbcodeToNativeCode($var->postContent->oriValue);     //attention!!!
             $data['parentid'] = $var->topicId->oriValue;
             $data['created'] = vB::getRequest()->getTimeNow();
             $result = vB_Api::instance('content_text')->add($data);
             if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
                 $var->postId->setOriValue($result);
+                //handle atts start,ref vB5_Frontend_Controller_CreateContent::index()
+                $attIds = MbqMain::$oMbqCm->getAttIdsFromContent($data['rawtext']);
+                if ($attIds) {
+                    foreach ($attIds as $attId) {
+                        $attData = array(
+                            'filedataid' => $attId,
+                            'filename' => 'ImageUploadedByTapatalk'.microtime(true).'.tmp'  //TODO:now only use a temp file name
+                        );
+                        try {
+                            $resultAtt = vB_Api::instance('node')->addAttachment($var->postId->oriValue, $attData);     //
+                            if (MbqMain::$oMbqAppEnv->exttHasErrors($resultAtt)) {
+                                MbqError::alert('', "Can not save attachment info!", '', MBQ_ERR_APP);
+                            }
+                        } catch (Exception $e) {
+                        	MbqError::alert('', "Can not save attachment info!", '', MBQ_ERR_APP);
+                        }
+                    }
+                }
+                //handle atts end
             } else {
-                MbqError::alert('', "Can not save!", '', MBQ_ERR_APP);
+                MbqError::alert('', "Can not save!Content too short or please post later.", '', MBQ_ERR_APP);
             }
             $oMbqRdEtForumPost = MbqMain::$oClk->newObj('MbqRdEtForumPost');
             $var = $oMbqRdEtForumPost->initOMbqEtForumPost($var->postId->oriValue, array('case' => 'byPostId'));    //for get state
@@ -50,11 +70,12 @@ Class MbqWrEtForumPost extends MbqBaseWrEtForumPost {
         } else {
             $data['title'] = $var->postTitle->oriValue;
             $data['parentid'] = $var->topicId->oriValue;
-            $data['rawtext'] = $var->postContent->oriValue;
+            //$data['rawtext'] = $var->postContent->oriValue;
+            $data['rawtext'] = MbqMain::$oMbqCm->exttConvertAppAttBbcodeToNativeCode($var->postContent->oriValue);     //attention!!!
             $result = vB_Api::instance('content_text')->update($var->postId->oriValue, $data);
             if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
             } else {
-                MbqError::alert('', "Can not save!", '', MBQ_ERR_APP);
+                MbqError::alert('', "Can not save!Content too short or please post later.", '', MBQ_ERR_APP);
             }
             $oMbqRdEtForumPost = MbqMain::$oClk->newObj('MbqRdEtForumPost');
             $var = $oMbqRdEtForumPost->initOMbqEtForumPost($var->postId->oriValue, array('case' => 'byPostId'));    //for get state
