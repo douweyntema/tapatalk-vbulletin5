@@ -9,7 +9,8 @@ vBulletin 5 Series Version 0.1.1 released
     6.support smartbanner
     7.fixed bug:guest can see the thread picture
     8.fixed bug:quoted content displaying error
-    9.some other modify
+    9.fixed bug:display wrong inbox number
+    10.some other modify
 
 -- Support forum:
 https://support.tapatalk.com/forums/vbulletin-discussion.53/

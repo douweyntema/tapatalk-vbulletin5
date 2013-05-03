@@ -30,7 +30,20 @@ Class MbqRdEtPc extends MbqBaseRdEtPc {
      */
     public function getUnreadPcNum() {
         if (MbqMain::hasLogin()) {
-            return vB_Api::instanceInternal('content_privatemessage')->getUnreadInboxCount();
+            try {
+                $result = vB_Api::instanceInternal('content_privatemessage')->fetchSummary();
+                if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+                    if ($var = $result['folders'][vB_Library_Content_Privatemessage::MESSAGE_FOLDER]) {
+                        return $var['qty'];
+                    } else {
+                        MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not find unread pm number.");
+                    }
+                } else {
+                    MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not get unread pm number.");
+                }
+            }  catch (Exception $e) {
+                MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not get unread pm number.");
+            }
         } else {
             MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . 'Need login!');
         }
