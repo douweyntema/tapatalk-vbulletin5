@@ -84,7 +84,7 @@ Class MbqWrEtForumTopic extends MbqBaseWrEtForumTopic {
                         foreach ($attIds as $attId) {
                             $attData = array(
                                 'filedataid' => $attId,
-                                'filename' => 'ImageUploadedByTapatalk'.microtime(true).'.tmp'  //TODO:now only use a temp file name
+                                'filename' => 'ImageUploadedByTapatalk'.microtime(true).'.jpg'  //TODO:since app only support jpg file,now only use a jpg file name
                             );
                             try {
                                 $resultAtt = vB_Api::instance('node')->addAttachment($var->topicId->oriValue, $attData);    //

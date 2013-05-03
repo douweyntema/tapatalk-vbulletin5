@@ -2,8 +2,8 @@
 
 <product productid="tapatalk" active="1">
 	<title>Tapatalk</title>
-	<description>Tapatalk mobile app plugin for vb5 beta.</description>
-	<version>0.1.0</version>
+	<description>Tapatalk mobile app plugin for vb5.</description>
+	<version>0.1.1</version>
 	<url>http://tapatalk.com</url>
 	<versioncheckurl>http://tapatalk.com/vb5.php</versioncheckurl>
 	<dependencies>
@@ -11,26 +11,70 @@
 	<codes>
 	</codes>
 	<templates>
-		<template name="tapatalk_detect_js" templatetype="template" date="1358072599" username="admin" version="0.1.0"><![CDATA[<!--
+		<template name="tapatalk_detect_js" templatetype="template" date="1367137140" username="admin" version="0.1.0"><![CDATA[<!-- out of date and useless code
 <script type="text/javascript">alert('{vb:raw vboptions.tapatalk_directory}');</script>
 -->]]></template>
+		<template name="tapatalk_init_smartbanner" templatetype="template" date="1367163172" username="admin" version="0.1.0"><![CDATA[<!-- Tapatalk Banner head start -->
+{vb:set tapatalkTempVarSiteUrl, {vb:url ''}}
+<link href="{vb:raw tapatalkTempVarSiteUrl}/{vb:raw vboptions.tapatalk_directory}/smartbanner/appbanner.css" rel="stylesheet" type="text/css" media="screen" />
+<script type="text/javascript">
+var app_ios_id = "{vb:raw vboptions.app_ios_id}";
+var app_android_url = "{vb:raw vboptions.app_android_url}";
+var app_kindle_url = "{vb:raw vboptions.app_kindle_url}";
+var app_banner_message = "{vb:raw vboptions.app_banner_message}";
+var app_forum_name = "{vb:raw vboptions.bbtitle}";
+var tapatalkTempVarSiteUrl = "{vb:raw tapatalkTempVarSiteUrl}";
+var tapatalkTempVar1 = tapatalkTempVarSiteUrl.substring(tapatalkTempVarSiteUrl.indexOf('://')+3);
+var app_location_url = 'tapatalk://'+tapatalkTempVar1+'/?location=index';
+</script>
+<script src="{vb:raw tapatalkTempVarSiteUrl}/{vb:raw vboptions.tapatalk_directory}/smartbanner/appbanner.js" type="text/javascript"></script>
+<!-- Tapatalk Banner head end-->]]></template>
+		<template name="tapatalk_run_smartbanner" templatetype="template" date="1367163540" username="admin" version="0.1.0"><![CDATA[<!-- Tapatalk Banner body start -->
+<script type="text/javascript">tapatalkDetect();</script>
+<!-- Tapatalk Banner body end -->]]></template>
 	</templates>
 	<stylevardfns>
 	</stylevardfns>
 	<stylevars>
 	</stylevars>
 	<hooks>
+		<hook>
+			<hookname>footer_copyright</hookname>
+			<title>Tapatalk: Run Tapatalk Smartbanner</title>
+			<active>1</active>
+			<hookorder>255</hookorder>
+			<template>tapatalk_run_smartbanner</template>
+			<arguments />
+		</hook>
+		<hook>
+			<hookname>header_head</hookname>
+			<title>Tapatalk: Init Tapatalk Smartbanner</title>
+			<active>1</active>
+			<hookorder>1</hookorder>
+			<template>tapatalk_init_smartbanner</template>
+			<arguments />
+		</hook>
 	</hooks>
 	<phrases>
 		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
-			<phrase name="setting_tapatalk_directory_desc" date="1359384600" username="admin" version="0.1.0"><![CDATA[Advanced Use Only. Change it only if you did rename the Tapatalk plugin directory. And the default value is 'mobiquo'.
+			<phrase name="setting_app_android_url_desc" date="1367152954" username="admin" version="0.1.0"><![CDATA[Enter your BYO App ID from Google Play, to be used on Android device. E.g. "com.quoord.tapatalkpro.activity"]]></phrase>
+			<phrase name="setting_app_android_url_title" date="1367152954" username="admin" version="0.1.0"><![CDATA[Android Product ID]]></phrase>
+			<phrase name="setting_app_banner_message_desc" date="1367138354" username="admin" version="0.1.0"><![CDATA[E.g. "Follow {your_forum_name} 
+with {app_name} for [os_platform]". Do not change the [os_platform] tag as it is displayed dynamically based on user's device platform.]]></phrase>
+			<phrase name="setting_app_banner_message_title" date="1367138354" username="admin" version="0.1.0"><![CDATA[BYO App Banner Message]]></phrase>
+			<phrase name="setting_app_ios_id_desc" date="1367139384" username="admin" version="0.1.0"><![CDATA[Enter your BYO product ID in Apple App Store, to be used on iOS device]]></phrase>
+			<phrase name="setting_app_ios_id_title" date="1367139384" username="admin" version="0.1.0"><![CDATA[BYO iOS App ID]]></phrase>
+			<phrase name="setting_app_kindle_url_desc" date="1367153081" username="admin" version="0.1.0"><![CDATA[Enter your BYO App URL from Amazon App Store, to be used on Kindle Fire device. E.g. "http://www.amazon.com/gp/mas/dl/android?p=com.quoord.tapatalkpro.activity"]]></phrase>
+			<phrase name="setting_app_kindle_url_title" date="1367153081" username="admin" version="0.1.0"><![CDATA[Kindle Fire Product URL]]></phrase>
+			<phrase name="setting_tapatalk_directory_desc" date="1367137677" username="admin" version="0.1.0"><![CDATA[Advanced Use Only. Change it only if you did rename the Tapatalk plugin directory. And the default value is 'mobiquo'.
 If you have installed Tapatalk plugin in different directory, you will also need to apply the same settings in Tapatalk Forum Owner Area at http://tapatalk.com/forum_owner.php]]></phrase>
-			<phrase name="setting_tapatalk_directory_title" date="1359384600" username="admin" version="0.1.0"><![CDATA[Tapatalk Plugin Directory]]></phrase>
-			<phrase name="setting_tapatalk_guest_okay_desc" date="1359384600" username="admin" version="0.1.0"><![CDATA[Allow non-registered users to access your forum via Tapatalk.]]></phrase>
-			<phrase name="setting_tapatalk_guest_okay_title" date="1359384600" username="admin" version="0.1.0"><![CDATA[Guest Access]]></phrase>
-			<phrase name="setting_tapatalk_hide_forum_desc" date="1359384600" username="admin" version="0.1.0"><![CDATA[Optional. Choose the sub-forums you want to hide from Tapatalk.]]></phrase>
-			<phrase name="setting_tapatalk_hide_forum_title" date="1359384600" username="admin" version="0.1.0"><![CDATA[Hide Sub-forums from Tapatalk]]></phrase>
-			<phrase name="settinggroup_tapatalk" date="1359384600" username="admin" version="0.1.0"><![CDATA[Tapatalk Options]]></phrase>
+			<phrase name="setting_tapatalk_directory_title" date="1367137677" username="admin" version="0.1.0"><![CDATA[Tapatalk Plugin Directory]]></phrase>
+			<phrase name="setting_tapatalk_guest_okay_desc" date="1367137677" username="admin" version="0.1.0"><![CDATA[Allow non-registered users to access your forum via Tapatalk.]]></phrase>
+			<phrase name="setting_tapatalk_guest_okay_title" date="1367137677" username="admin" version="0.1.0"><![CDATA[Guest Access]]></phrase>
+			<phrase name="setting_tapatalk_hide_forum_desc" date="1367137677" username="admin" version="0.1.0"><![CDATA[Optional. Choose the sub-forums you want to hide from Tapatalk.]]></phrase>
+			<phrase name="setting_tapatalk_hide_forum_title" date="1367137677" username="admin" version="0.1.0"><![CDATA[Hide Sub-forums from Tapatalk]]></phrase>
+			<phrase name="settinggroup_tapatalk" date="1367137677" username="admin" version="0.1.0"><![CDATA[Tapatalk - General Settings]]></phrase>
+			<phrase name="settinggroup_tapatalk_byo" date="1367137902" username="admin" version="0.1.0"><![CDATA[Tapatalk - BYO Settings]]></phrase>
 		</phrasetype>
 	</phrases>
 	<options>
@@ -49,6 +93,25 @@ If you have installed Tapatalk plugin in different directory, you will also need
 			<setting varname="tapatalk_directory" displayorder="4">
 				<datatype>free</datatype>
 				<defaultvalue>mobiquo</defaultvalue>
+				<public>1</public>
+			</setting>
+		</settinggroup>
+		<settinggroup name="tapatalk_byo" displayorder="2">
+			<setting varname="app_banner_message" displayorder="1">
+				<datatype>free</datatype>
+				<optioncode>textarea</optioncode>
+				<public>1</public>
+			</setting>
+			<setting varname="app_ios_id" displayorder="2">
+				<datatype>free</datatype>
+				<public>1</public>
+			</setting>
+			<setting varname="app_android_url" displayorder="3">
+				<datatype>free</datatype>
+				<public>1</public>
+			</setting>
+			<setting varname="app_kindle_url" displayorder="4">
+				<datatype>free</datatype>
 				<public>1</public>
 			</setting>
 		</settinggroup>

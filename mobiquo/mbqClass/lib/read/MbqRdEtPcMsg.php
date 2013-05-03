@@ -72,12 +72,12 @@ Class MbqRdEtPcMsg extends MbqBaseRdEtPcMsg {
                 $result = vB_Api::instanceInternal('node')->getFullContentforNodes($var);
                 if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
                     $arrMsgRecord = $result;
-                    require_once(MBQ_APPEXTENTION_PATH.'ExttMbqVbLibraryContentPrivatemessage.php');
-                    $oExttMbqVbLibraryContentPrivatemessage = new ExttMbqVbLibraryContentPrivatemessage();
                     foreach ($arrMsgRecord as $msgRecord) {
                         $nodeid = $msgRecord['content']['nodeid'];
                         $resultText = vB_Api::instanceInternal('content_text')->getDataForParse(array($nodeid));
-                        $macro = vB5_Template_NodeText::instance()->register($nodeid, $resultText[$nodeid]['bbcodeoptions']);
+                        //removed $resultText[$nodeid]['bbcodeoptions'] parameter
+                        $macro = vB5_Template_NodeText::instance()->register($nodeid);
+                        //$macro = vB5_Template_NodeText::instance()->register($nodeid, $resultText[$nodeid]['bbcodeoptions']);
                         vB5_Template_NodeText::instance()->replacePlaceholders($macro);
                         $oMbqEtPcMsg = MbqMain::$oClk->newObj('MbqEtPcMsg');
                         $oMbqEtPcMsg->mbqBind['msgRecord'] = $msgRecord;

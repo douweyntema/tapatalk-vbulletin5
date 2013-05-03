@@ -215,7 +215,9 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
         if ($mbqOpt['case'] == 'postRecord') {
             $nodeid = $var['content']['nodeid'];
             $result = vB_Api::instanceInternal('content_text')->getDataForParse(array($nodeid));
-            $macro = vB5_Template_NodeText::instance()->register($nodeid, $result[$nodeid]['bbcodeoptions']);
+            //the $result[$nodeid]['bbcodeoptions'] caused guest can see limited content for example:image,so removed it
+            $macro = vB5_Template_NodeText::instance()->register($nodeid);
+            //$macro = vB5_Template_NodeText::instance()->register($nodeid, $result[$nodeid]['bbcodeoptions']);
             vB5_Template_NodeText::instance()->replacePlaceholders($macro);
             $oMbqEtForumPost = MbqMain::$oClk->newObj('MbqEtForumPost');
             $oMbqEtForumPost->postId->setOriValue($var['content']['nodeid']);
@@ -281,13 +283,14 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             } else {
             }
             if ($obj->mbqBind['bbcodeoptions']['allowbbcode']) {
+    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_quote">.*?<div class="quote_container">.*?<div class="bbcode_quote_container vb-icon vb-icon-quote-large"><\/div>.*?<div class="bbcode_postedby">.*?<strong>(.*?)<\/strong>.*?<\/div>.*?<div class="message">(.*?)<\/div>.*?<\/div>.*?<\/div>.*?<\/div>/is', '$1 wrote:[quote]$2[/quote]', $post);    //quote no quoted content
+    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_quote">.*?<div class="quote_container">.*?<div class="bbcode_quote_container vb-icon vb-icon-quote-large"><\/div>.*?<div class="bbcode_postedby">.*?<strong>(.*?)<\/strong>.*?<\/div>.*?<div class="message"><!-- ##.*?## -->(.*?)<\/div>.*?<\/div>.*?<\/div>.*?<\/div>/is', '$1 wrote:[quote]$2[/quote]', $post);    //quote another quoted content
     	        $post = preg_replace_callback('/<font color=\"(\#.*?)\">(.*?)<\/font>/is', create_function('$matches','return MbqMain::$oMbqCm->mbColorConvert($matches[1], $matches[2]);'), $post);
             	$post = str_ireplace('<strong>', '<b>', $post);
             	$post = str_ireplace('</strong>', '</b>', $post);
     	        $post = preg_replace('/<img .*?src="(.*?)" .*?\/>/i', '[img]$1[/img]', $post);
     	        $post = preg_replace('/<a .*?href="mailto:(.*?)".*?>(.*?)<\/a>/i', '[url=$1]$2[/url]', $post);
     	        $post = preg_replace('/<a .*?href="(.*?)".*?>(.*?)<\/a>/i', '[url=$1]$2[/url]', $post);
-    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_quote">.*?<div class="quote_container">.*?<div class="bbcode_quote_container"><\/div>(.*?)<\/div>.*?<\/div>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //quote
     	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_description">Code\:<\/div>.*?<pre class="bbcode_code".*?>(.*?)<\/pre>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //code
     	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_description">HTML Code\:<\/div>.*?<pre class="bbcode_code".*?>(.*?)<\/pre>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //html
     	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_description">PHP Code\:<\/div>.*?<div class="bbcode_code".*?><code><code>(.*?)<\/code><\/code><\/div>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //php
