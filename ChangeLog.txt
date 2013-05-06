@@ -1,6 +1,7 @@
 vBulletin 5 Series Version 0.1.1 released
 
 -- Change Log
+    Support for vBulletin 5.0.1
     1.optimize content displaying
     2.support attachment feature
     3.fixed bug:return wrong reg_url in get_config
