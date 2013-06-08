@@ -14,18 +14,19 @@
 		<template name="tapatalk_detect_js" templatetype="template" date="1367137140" username="admin" version="0.1.0"><![CDATA[<!-- out of date and useless code
 <script type="text/javascript">alert('{vb:raw vboptions.tapatalk_directory}');</script>
 -->]]></template>
-		<template name="tapatalk_init_smartbanner" templatetype="template" date="1367163172" username="admin" version="0.1.0"><![CDATA[<!-- Tapatalk Banner head start -->
+		<template name="tapatalk_init_smartbanner" templatetype="template" date="1370670910" username="admin" version="0.1.1"><![CDATA[<!-- Tapatalk Banner head start -->
 {vb:set tapatalkTempVarSiteUrl, {vb:url ''}}
 <link href="{vb:raw tapatalkTempVarSiteUrl}/{vb:raw vboptions.tapatalk_directory}/smartbanner/appbanner.css" rel="stylesheet" type="text/css" media="screen" />
 <script type="text/javascript">
 var app_ios_id = "{vb:raw vboptions.app_ios_id}";
-var app_android_url = "{vb:raw vboptions.app_android_url}";
+var app_android_id = "{vb:raw vboptions.app_android_id}";
 var app_kindle_url = "{vb:raw vboptions.app_kindle_url}";
 var app_banner_message = "{vb:raw vboptions.app_banner_message}";
 var app_forum_name = "{vb:raw vboptions.bbtitle}";
 var tapatalkTempVarSiteUrl = "{vb:raw tapatalkTempVarSiteUrl}";
 var tapatalkTempVar1 = tapatalkTempVarSiteUrl.substring(tapatalkTempVarSiteUrl.indexOf('://')+3);
 var app_location_url = 'tapatalk://'+tapatalkTempVar1+'/?location=index';
+var functionCallAfterWindowLoad = 0;
 </script>
 <script src="{vb:raw tapatalkTempVarSiteUrl}/{vb:raw vboptions.tapatalk_directory}/smartbanner/appbanner.js" type="text/javascript"></script>
 <!-- Tapatalk Banner head end-->]]></template>
@@ -57,8 +58,8 @@ var app_location_url = 'tapatalk://'+tapatalkTempVar1+'/?location=index';
 	</hooks>
 	<phrases>
 		<phrasetype name="vBulletin Settings" fieldname="vbsettings">
-			<phrase name="setting_app_android_url_desc" date="1367152954" username="admin" version="0.1.0"><![CDATA[Enter your BYO App ID from Google Play, to be used on Android device. E.g. "com.quoord.tapatalkpro.activity"]]></phrase>
-			<phrase name="setting_app_android_url_title" date="1367152954" username="admin" version="0.1.0"><![CDATA[Android Product ID]]></phrase>
+			<phrase name="setting_app_android_id_desc" date="1370669838" username="admin" version="0.1.1"><![CDATA[Enter your BYO App ID from Google Play, to be used on Android device. E.g. "com.quoord.tapatalkpro.activity"]]></phrase>
+			<phrase name="setting_app_android_id_title" date="1370669838" username="admin" version="0.1.1"><![CDATA[Android Product ID]]></phrase>
 			<phrase name="setting_app_banner_message_desc" date="1367138354" username="admin" version="0.1.0"><![CDATA[E.g. "Follow {your_forum_name} 
 with {app_name} for [os_platform]". Do not change the [os_platform] tag as it is displayed dynamically based on user's device platform.]]></phrase>
 			<phrase name="setting_app_banner_message_title" date="1367138354" username="admin" version="0.1.0"><![CDATA[BYO App Banner Message]]></phrase>
@@ -106,7 +107,7 @@ If you have installed Tapatalk plugin in different directory, you will also need
 				<datatype>free</datatype>
 				<public>1</public>
 			</setting>
-			<setting varname="app_android_url" displayorder="3">
+			<setting varname="app_android_id" displayorder="3">
 				<datatype>free</datatype>
 				<public>1</public>
 			</setting>
