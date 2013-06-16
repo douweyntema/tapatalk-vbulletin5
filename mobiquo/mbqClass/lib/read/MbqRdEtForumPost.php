@@ -40,10 +40,13 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             if ($mbqOpt['oMbqDataPage']) {
                 $oMbqDataPage = $mbqOpt['oMbqDataPage'];
             	$search['channel'] = $oMbqEtForumTopic->topicId->oriValue;
-            	$search['contenttypeid'] = vB_Api::instanceInternal('contenttype')->fetchContentTypeIdFromClass('Text');
+            	//$search['contenttypeid'] = vB_Api::instanceInternal('contenttype')->fetchContentTypeIdFromClass('Text');
             	$search['view'] = vB_Api_Search::FILTER_VIEW_CONVERSATION_THREAD;
-            	$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
-	            $search['sort']['publishdate'] = 'asc';
+            	//$search['depth'] = EXTTMBQ_NO_LIMIT_DEPTH;
+            	$search['depth'] = 1;
+	            $search['include_starter'] = true;
+	            //$search['sort']['publishdate'] = 'asc';
+	            $search['sort']['created'] = 'asc';
             	try {
                 	$result = vB_Api::instanceInternal('search')->getInitialResults($search, $oMbqDataPage->numPerPage, $oMbqDataPage->curPage, true);
                 	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
@@ -268,6 +271,7 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
         */
         $post = $content;
         if ($returnHtml) {
+            //MbqCm::writeLog($content."\n\n\n\n--------------------------------------------------------\n\n\n\n", true);
             if ($obj->mbqBind['bbcodeoptions']['allowsmilies']) {
             	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/biggrin.png".*?\/>/i', ':D', $post);
             	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/frown.png".*?\/>/i', ':(', $post);
@@ -285,16 +289,16 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             if ($obj->mbqBind['bbcodeoptions']['allowbbcode']) {
     	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_quote">.*?<div class="quote_container">.*?<div class="bbcode_quote_container vb-icon vb-icon-quote-large"><\/div>.*?<div class="bbcode_postedby">.*?<strong>(.*?)<\/strong>.*?<\/div>.*?<div class="message">(.*?)<\/div>.*?<\/div>.*?<\/div>.*?<\/div>/is', '$1 wrote:[quote]$2[/quote]', $post);    //quote no quoted content
     	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_quote">.*?<div class="quote_container">.*?<div class="bbcode_quote_container vb-icon vb-icon-quote-large"><\/div>.*?<div class="bbcode_postedby">.*?<strong>(.*?)<\/strong>.*?<\/div>.*?<div class="message"><!-- ##.*?## -->(.*?)<\/div>.*?<\/div>.*?<\/div>.*?<\/div>/is', '$1 wrote:[quote]$2[/quote]', $post);    //quote another quoted content
+    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_quote">.*?<div class="quote_container">.*?<div class="bbcode_quote_container vb-icon vb-icon-quote-large"><\/div>(.*?)<\/div>.*?<\/div>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //simple quote,for example:[quote]anything[/quote]
     	        $post = preg_replace_callback('/<font color=\"(\#.*?)\">(.*?)<\/font>/is', create_function('$matches','return MbqMain::$oMbqCm->mbColorConvert($matches[1], $matches[2]);'), $post);
             	$post = str_ireplace('<strong>', '<b>', $post);
             	$post = str_ireplace('</strong>', '</b>', $post);
     	        $post = preg_replace('/<img .*?src="(.*?)" .*?\/>/i', '[img]$1[/img]', $post);
     	        $post = preg_replace('/<a .*?href="mailto:(.*?)".*?>(.*?)<\/a>/i', '[url=$1]$2[/url]', $post);
     	        $post = preg_replace('/<a .*?href="(.*?)".*?>(.*?)<\/a>/i', '[url=$1]$2[/url]', $post);
-    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_description">Code\:<\/div>.*?<pre class="bbcode_code".*?>(.*?)<\/pre>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //code
-    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_description">HTML Code\:<\/div>.*?<pre class="bbcode_code".*?>(.*?)<\/pre>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //html
-    	        $post = preg_replace('/<div class="bbcode_container">.*?<div class="bbcode_description">PHP Code\:<\/div>.*?<div class="bbcode_code".*?><code><code>(.*?)<\/code><\/code><\/div>.*?<\/div>/is', '[quote]$1[/quote]', $post);    //php
-    	        //MbqCm::writeLog($post);MbqError::alert('', 'ee');
+    	        $post = preg_replace('/<div class="bbcode_container">[^<]*?<div class="bbcode_description">PHP Code\:<\/div>[^<]*?<div class="bbcode_code"[^>]*?><code><code>(.*?)<\/code><\/code><\/div>[^<]*?<\/div>/is', 'PHP Code:[quote]$1[/quote]', $post);    //php
+    	        $post = preg_replace('/<div class="bbcode_container">[^<]*?<div class="bbcode_description">Code\:<\/div>[^<]*?<pre class="bbcode_code"[^>]*?>(.*?)<\/pre>[^<]*?<\/div>/is', 'Code:[quote]$1[/quote]', $post);    //code
+    	        $post = preg_replace('/<div class="bbcode_container">[^<]*?<div class="bbcode_description">HTML Code\:<\/div>[^<]*?<pre class="bbcode_code"[^>]*?>(.*?)<\/pre>[^<]*?<\/div>/is', 'HTML Code:[quote]$1[/quote]', $post);    //html
     	        $post = preg_replace('/<object .*?>.*?<embed src="(.*?)".*?><\/embed><\/object>/is', '[url=$1]$1[/url]', $post); /* for youtube content etc. */
                 $post = str_ireplace('<hr />', '<br />____________________________________<br />', $post);
         	    $post = str_ireplace('<li>', "\t\t<li>", $post);
@@ -310,6 +314,7 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
     	    $post = strip_tags($post);
         }
     	$post = trim($post);
+            //MbqCm::writeLog($post."\n\n\n\n--------------------------------------------------------\n\n\n\n", true);
     	return $post;
     }
     
