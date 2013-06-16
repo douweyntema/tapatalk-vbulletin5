@@ -246,7 +246,8 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
             $oMbqEtForumTopic->totalPostNum->setOriValue($var['content']['startertotalcount']);
             $oMbqEtForumTopic->topicId->setOriValue($var['content']['nodeid']);
             $oMbqEtForumTopic->forumId->setOriValue($var['content']['parentid']);
-            $oMbqEtForumTopic->topicTitle->setOriValue($var['content']['title']);
+            //$oMbqEtForumTopic->topicTitle->setOriValue($var['content']['title']);
+            $oMbqEtForumTopic->topicTitle->setOriValue(htmlspecialchars_decode($var['content']['title']));
             $oMbqEtForumTopic->topicContent->setOriValue($var['content']['rawtext']);
             $oMbqEtForumTopic->shortContent->setOriValue(MbqMain::$oMbqCm->getShortContent($var['content']['rawtext']));
             $oMbqEtForumTopic->topicAuthorId->setOriValue($var['content']['starteruserid']);
