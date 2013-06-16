@@ -161,7 +161,8 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
      * @return  String
      */
     public function getDisplayName($oMbqEtUser) {
-        return $oMbqEtUser->loginName->oriValue;
+        //return $oMbqEtUser->loginName->oriValue;
+        return htmlspecialchars_decode($oMbqEtUser->loginName->oriValue);
     }
     
     /**
