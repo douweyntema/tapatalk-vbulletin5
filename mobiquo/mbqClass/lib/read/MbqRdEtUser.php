@@ -114,8 +114,11 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
             $oMbqEtUser->regTime->setOriValue($var['joindate']);
             $oMbqEtUser->lastActivityTime->setOriValue($var['lastactivity']);
             $oMbqEtUser->canWhosonline->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canWhosonline.range.yes'));
-            if (vB_Api::instanceInternal('content_privatemessage')->canUsePmSystem()) {
+            if (MbqMain::$oMbqAppEnv->exttOptions['enablepms']) {
                 $oMbqEtUser->canPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canPm.range.yes'));
+                if ($oMbqEtUser->mbqBind['userRecord']['receivepm']) {
+                    $oMbqEtUser->acceptPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.acceptPm.range.yes'));
+                }
                 $oMbqEtUser->canSendPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canSendPm.range.yes'));
             }
             $oMbqEtUser->maxAttachment->setOriValue(MbqMain::$oMbqAppEnv->exttOptions['maximages']);
