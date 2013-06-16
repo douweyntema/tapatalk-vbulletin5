@@ -273,17 +273,17 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
         if ($returnHtml) {
             //MbqCm::writeLog($content."\n\n\n\n--------------------------------------------------------\n\n\n\n", true);
             if ($obj->mbqBind['bbcodeoptions']['allowsmilies']) {
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/biggrin.png".*?\/>/i', ':D', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/frown.png".*?\/>/i', ':(', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/mad.png".*?\/>/i', ':mad:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/tongue.png".*?\/>/i', ':p', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/redface.png".*?\/>/i', ':o', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/confused.png".*?\/>/i', ':confused:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/wink.png".*?\/>/i', ';)', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/smile.png".*?\/>/i', ':)', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/rolleyes.png".*?\/>/i', ':rolleyes:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/cool.png".*?\/>/i', ':cool:', $post);
-            	$post = preg_replace('/<img .*?src=".*?\/core\/images\/smilies\/eek.png".*?\/>/i', ':eek:', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/biggrin.png"[^>]*?\/>/i', ':D', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/frown.png"[^>]*?\/>/i', ':(', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/mad.png"[^>]*?\/>/i', ':mad:', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/tongue.png"[^>]*?\/>/i', ':p', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/redface.png"[^>]*?\/>/i', ':o', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/confused.png"[^>]*?\/>/i', ':confused:', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/wink.png"[^>]*?\/>/i', ';)', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/smile.png"[^>]*?\/>/i', ':)', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/rolleyes.png"[^>]*?\/>/i', ':rolleyes:', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/cool.png"[^>]*?\/>/i', ':cool:', $post);
+            	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/eek.png"[^>]*?\/>/i', ':eek:', $post);
             } else {
             }
             if ($obj->mbqBind['bbcodeoptions']['allowbbcode']) {
@@ -299,6 +299,8 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
     	        $post = preg_replace('/<div class="bbcode_container">[^<]*?<div class="bbcode_description">PHP Code\:<\/div>[^<]*?<div class="bbcode_code"[^>]*?><code><code>(.*?)<\/code><\/code><\/div>[^<]*?<\/div>/is', 'PHP Code:[quote]$1[/quote]', $post);    //php
     	        $post = preg_replace('/<div class="bbcode_container">[^<]*?<div class="bbcode_description">Code\:<\/div>[^<]*?<pre class="bbcode_code"[^>]*?>(.*?)<\/pre>[^<]*?<\/div>/is', 'Code:[quote]$1[/quote]', $post);    //code
     	        $post = preg_replace('/<div class="bbcode_container">[^<]*?<div class="bbcode_description">HTML Code\:<\/div>[^<]*?<pre class="bbcode_code"[^>]*?>(.*?)<\/pre>[^<]*?<\/div>/is', 'HTML Code:[quote]$1[/quote]', $post);    //html
+    	        //remove Attached Files html code
+    	        $post = preg_replace('/<div class="attachment-list">[^<]*?Attached Files[^<]*?<ul>.*?<\/ul>[^<]*?<\/div>/is', '', $post);
     	        $post = preg_replace('/<object .*?>.*?<embed src="(.*?)".*?><\/embed><\/object>/is', '[url=$1]$1[/url]', $post); /* for youtube content etc. */
                 $post = str_ireplace('<hr />', '<br />____________________________________<br />', $post);
         	    $post = str_ireplace('<li>', "\t\t<li>", $post);
