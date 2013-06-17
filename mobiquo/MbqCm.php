@@ -89,11 +89,15 @@ Class MbqCm extends MbqBaseCm {
      * @return  Array
      */
     public function getAttIdsFromContent($content) {
-        preg_match_all('/\[ATTACH=CONFIG\]n([^\[]*?)\[\/ATTACH\]/i', $content, $mat);
-        if ($mat[1]) {
-            return $mat[1];
-        } else {
+        if (MbqMain::$oMbqAppEnv->exttOptions['templateversion'] >= '5.0.2') {  //fixed compatible issue in vb5.0.2 when displaying attachments
             return array();
+        } else {
+            preg_match_all('/\[ATTACH=CONFIG\]n([^\[]*?)\[\/ATTACH\]/i', $content, $mat);
+            if ($mat[1]) {
+                return $mat[1];
+            } else {
+                return array();
+            }
         }
     }
     
