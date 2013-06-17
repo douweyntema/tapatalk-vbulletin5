@@ -121,7 +121,7 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
             $oMbqEtUser->canWhosonline->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canWhosonline.range.yes'));
             if (MbqMain::$oMbqAppEnv->exttOptions['enablepms']) {
                 $oMbqEtUser->canPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canPm.range.yes'));
-                if ($oMbqEtUser->mbqBind['userRecord']['receivepm']) {
+                if ($var['receivepm']) {
                     $oMbqEtUser->acceptPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.acceptPm.range.yes'));
                 }
                 $oMbqEtUser->canSendPm->setOriValue(MbqBaseFdt::getFdt('MbqFdtUser.MbqEtUser.canSendPm.range.yes'));
