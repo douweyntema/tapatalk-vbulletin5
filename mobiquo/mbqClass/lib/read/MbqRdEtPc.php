@@ -123,7 +123,7 @@ Class MbqRdEtPc extends MbqBaseRdEtPc {
                                 $oMbqEtPc->convId->setOriValue($pcRecord['content']['nodeid']);
                                 $oMbqEtPc->convTitle->setOriValue($pcRecord['content']['title']);
                                 $oMbqEtPc->totalMessageNum->setOriValue($pcRecord['content']['startertotalcount']);
-                                $oMbqEtPc->participantCount->setOriValue($oMbqEtPc->mbqBind['participants']);
+                                $oMbqEtPc->participantCount->setOriValue(count($oMbqEtPc->mbqBind['participants']));
                                 foreach ($oMbqEtPc->mbqBind['participants'] as $participant) {
                                     $userIds[$participant['userid']] = $participant['userid'];
                                 }
