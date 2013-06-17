@@ -273,6 +273,7 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
         if ($returnHtml) {
             //MbqCm::writeLog($content."\n\n\n\n--------------------------------------------------------\n\n\n\n", true);
             if ($obj->mbqBind['bbcodeoptions']['allowsmilies']) {
+                /* directly display smillies picture before app implement it for vb5
             	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/biggrin.png"[^>]*?\/>/i', ':D', $post);
             	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/frown.png"[^>]*?\/>/i', ':(', $post);
             	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/mad.png"[^>]*?\/>/i', ':mad:', $post);
@@ -284,6 +285,7 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/rolleyes.png"[^>]*?\/>/i', ':rolleyes:', $post);
             	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/cool.png"[^>]*?\/>/i', ':cool:', $post);
             	$post = preg_replace('/<img [^>]*?src="[^>]*?\/core\/images\/smilies\/eek.png"[^>]*?\/>/i', ':eek:', $post);
+            	*/
             } else {
             }
             if ($obj->mbqBind['bbcodeoptions']['allowbbcode']) {
