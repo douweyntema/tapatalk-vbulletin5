@@ -233,8 +233,8 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
             $oMbqEtForumPost->mbqBind['bbcodeoptions'] = $result[$nodeid]['bbcodeoptions'];
             $oMbqEtForumPost->postContent->setOriValue($var['content']['rawtext']);
             $oMbqEtForumPost->postContent->setAppDisplayValue($macro);
-            $oMbqEtForumPost->postContent->setTmlDisplayValue($this->processContentForDisplay($macro, true, $oMbqEtForumPost));
-            $oMbqEtForumPost->postContent->setTmlDisplayValueNoHtml($this->processContentForDisplay($macro, false, $oMbqEtForumPost));
+            $oMbqEtForumPost->postContent->setTmlDisplayValue(htmlspecialchars_decode($this->processContentForDisplay($macro, true, $oMbqEtForumPost)));
+            $oMbqEtForumPost->postContent->setTmlDisplayValueNoHtml(htmlspecialchars_decode($this->processContentForDisplay($macro, false, $oMbqEtForumPost)));
             $oMbqEtForumPost->shortContent->setOriValue(MbqMain::$oMbqCm->getShortContent($oMbqEtForumPost->postContent->tmlDisplayValue));
             if ($var['content']['approved']) {
                 $oMbqEtForumPost->state->setOriValue(MbqBaseFdt::getFdt('MbqFdtForum.MbqEtForumPost.state.range.postOk'));
