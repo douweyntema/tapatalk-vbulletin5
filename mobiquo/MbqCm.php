@@ -108,7 +108,11 @@ Class MbqCm extends MbqBaseCm {
      * @return  String
      */
     public function exttConvertAppAttBbcodeToNativeCode($content) {
-        $content = preg_replace('/\[ATTACH\]([^\[]*?)\[\/ATTACH\]/i', '[ATTACH=CONFIG]n$1[/ATTACH]', $content);
+        if (MbqMain::$oMbqAppEnv->exttOptions['templateversion'] >= '5.0.2') {  //fixed compatible issue in vb5.0.2 when saving attachments
+            $content = preg_replace('/\[ATTACH\]([^\[]*?)\[\/ATTACH\]/i', '[IMG]'.MbqMain::$oMbqAppEnv->rootUrl.'/filedata/fetch?filedataid=$1[/IMG]', $content);
+        } else {
+            $content = preg_replace('/\[ATTACH\]([^\[]*?)\[\/ATTACH\]/i', '[ATTACH=CONFIG]n$1[/ATTACH]', $content);
+        }
         return $content;
     }
     
