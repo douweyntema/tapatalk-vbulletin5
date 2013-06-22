@@ -1,28 +1,33 @@
--- Installation:
-	At First,please uninstall the old tapatalk product in vb5 backend and delete the mobiquo folder,and continue the following steps!
-	1. Upload mobiquo folder to your vb5 root folder.You should make the files under the mobiquo folder can be accessed directly through browser,otherwise the plugin may would not work;
-	2. In your vb5 admin panel, go to Products & Hooks > Manage Products,and click the [Add/Import Product] link;
-	3. Select product_tapatalk.xml in the mobiquo folder;
-	4. Click Import,and please confirm the Tapatalk product has been enabled;
+Tapatalk Plugin for vBulletin 5.x Installation
 
--- Change Log
-	vBulletin 5 Series Version 1.0.0 released
-    	Support for vBulletin 5.0.1/5.0.2
-    	1.fixed bug:can not correctly display topic title when include special characters
-    	2.fixed bug:can not correctly get thread in some special topic
-    	3.optimize content displaying
-    	4.fixed compatible issue in vb5.0.2 when displaying attachments
-    	5.directly display smillies picture before app implement it for vb5
-    	6.fixed navi compatibility issue on android tt2 and tt4
-    	7.improve smartbanner
-    	8.add conv_title for conversation to prevent tt2+ crashing
-    	9.fixed some other bugs
-    	10.some other modify
-    
--- Special Instruction for Branded Customer
-	By default the Plugin will notify mobile users to download Tapatalk app. If you have purchased the branded license from us and wish to send mobile user to your mobile app, please config in Tapatalk - BYO Settings of vb5 backend Settings Options.
+-- First Time Installation --
+1. Upload the 'mobiquo' folder to the root of your vBulletin 5 installation. Ensure the folder can be accessed from your browser or else the mod may fail to work as designed.
+2. In the vBulletin 5 AdminCP, go to Projects & Hooks -> Manage Products. Towards the bottom, click the [Add/Import Product] option.
+3. You can import the file from your server using the 'import the XML file from your server' option. Input this './mobiquo/product-tapatalk.xml', then click the Import button.
+4. The plugin has been installed and now you can configure it. The settings are located at AdminCP -> Settings -> Options -> Tapatalk - General Settings.
 
--- Support forum:
+-- Upgrading from Pre 1.0.0 Tapatalk Plugin --
+If you were using a version of the vBulletin 5 Tapatalk Plugin that came before Version 1.0.0, you should uninstall the Tapatalk Product from the vBulletin 5 AdminCP and also delete the 'mobiquo' folder. You may then continue with the steps listed above.
+
+-- Changelog --
+vBulletin 5 Series Version 1.0.0 released
+        Supports vBulletin 5.0.1/5.0.2
+        1. Fixed Bug: Can't correctly display topic title when special characters are present.
+        2. Fixed Bug: Can't correctly get thread data in some special topics.
+        3. Optimisations to content display.
+        4. Fixed compatiblity issue in vBulletin 5.0.2 in regards to attachments.
+        5. Directly display smillies image before app implements it for vBulletin 5.
+        6. Fixed Navigation compatibility issue when on Android Tapatalk 2 and Tapatalk 4.
+        7. Smart Banner improvements.
+        8. Add con_title for conversations to prevent Tapatalk 2 and above from crashing.
+        9. Fixed some other bugs.
+        10. Other modifications.
+
+-- Brand Customer Special Instructions --
+By default, the plugin will notify mobile users to download the official Tapatalk app. If you have purchased the BYO license from us and wish to send mobile users to your mobile app, please set that up as required in vBulletin: AdminCP -> Settings -> Options -> Tapatalk - BYO Settings.
+
+-- Support Forum --
+If you require additional support, we have a forum setup for just that. Visit the link below:
 https://support.tapatalk.com/forums/vbulletin-discussion.53/
 
-20130617
+20130622
