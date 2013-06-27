@@ -86,7 +86,11 @@ Class MbqAclEtForumTopic extends MbqBaseAclEtForumTopic {
      * @return  Boolean
      */
     public function canAclGetLatestTopic() {
-        return MbqMain::hasLogin();
+        if (MbqMain::$oMbqConfig->getCfg('forum.guest_search')->oriValue == MbqBaseFdt::getFdt('MbqFdtConfig.forum.guest_search.range.support')) {
+            return true;
+        } else {
+            return MbqMain::hasLogin();
+        }
     }
     
     /**
