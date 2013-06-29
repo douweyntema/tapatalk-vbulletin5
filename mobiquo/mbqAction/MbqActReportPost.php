@@ -20,7 +20,8 @@ Class MbqActReportPost extends MbqBaseActReportPost {
      * action implement
      */
     public function actionImplement() {
-        parent::actionImplement();
+        //parent::actionImplement();
+        $this->data['result'] = true;   //dummy report post
     }
   
 }
