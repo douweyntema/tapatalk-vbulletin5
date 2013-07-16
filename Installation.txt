@@ -10,18 +10,12 @@ Tapatalk Plugin for vBulletin 5.x Installation
 If you were using a version of the vBulletin 5 Tapatalk Plugin that came before Version 1.0.0, you should uninstall the Tapatalk Product from the vBulletin 5 AdminCP and also delete the 'mobiquo' folder. You may then continue with the steps listed above.
 
 -- Changelog --
-vBulletin 5 Series Version 1.0.0 released
-        Supports vBulletin 5.0.1/5.0.2
-        1. Fixed Bug: Can't correctly display topic title when special characters are present.
-        2. Fixed Bug: Can't correctly get thread data in some special topics.
-        3. Optimisations to content display.
-        4. Fixed compatiblity issue in vBulletin 5.0.2 in regards to attachments.
-        5. Directly display smillies image before app implements it for vBulletin 5.
-        6. Fixed Navigation compatibility issue when on Android Tapatalk 2 and Tapatalk 4.
-        7. Smart Banner improvements.
-        8. Add con_title for conversations to prevent Tapatalk 2 and above from crashing.
-        9. Fixed some other bugs.
-        10. Other modifications.
+vBulletin 5 Series Version 1.0.1 released
+    Supports vBulletin 5
+    1.Fixed bug:can display nothing and can do nothing after login in vBulletin 5.0.3.
+    2.Smart Banner improvements.
+    3.Finished some compatiblity work for vBulletin 5.0.3.
+    4.Other modifications.
 
 -- Brand Customer Special Instructions --
 By default, the plugin will notify mobile users to download the official Tapatalk app. If you have purchased the BYO license from us and wish to send mobile users to your mobile app, please set that up as required in vBulletin: AdminCP -> Settings -> Options -> Tapatalk - BYO Settings.
@@ -30,4 +24,4 @@ By default, the plugin will notify mobile users to download the official Tapatal
 If you require additional support, we have a forum setup for just that. Visit the link below:
 https://support.tapatalk.com/forums/vbulletin-discussion.53/
 
-20130622
+20130716
