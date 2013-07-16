@@ -54,18 +54,19 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
             return $objsMbqEtUser;
         } elseif ($mbqOpt['case'] == 'online') {
             try {
-                /*
                 $result = vB_Api::instance('wol')->fetchAll();
                 if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
                     $userIds = array();
                     foreach ($result as $record) {
-                        $userIds[] = $record['userid'];
+                        if ($record['userid']) {
+                            $userIds[] = $record['userid'];
+                        }
                     }
                     return $this->getObjsMbqEtUser($userIds, array('case' => 'byUserIds'));
                 } else {
                     MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not get online user.");
                 }
-                */
+                /*
                 require_once(MBQ_APPEXTENTION_PATH.'ExttMbqFunctions.php');
                 $oExttMbqFunctions = new ExttMbqFunctions();
                 $result = $oExttMbqFunctions->exttMbqFetchAll();
@@ -80,6 +81,7 @@ Class MbqRdEtUser extends MbqBaseRdEtUser {
                 } else {
                     MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not get online user.");
                 }
+                */
             } catch (Exception $e) {
                 MbqError::alert('', __METHOD__ . ',line:' . __LINE__ . '.' . "Can not get online user.");
             }

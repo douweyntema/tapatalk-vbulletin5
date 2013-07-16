@@ -14,6 +14,8 @@ class ExttMbqFunctions
 	 * Fetch who is online records
 	 *
 	 * modified from vB_Api_Wol::fetchAll() in vb5 beta26
+	 *
+	 * This method is useless,will be removed
 	 */
 	public function exttMbqFetchAll($pagekey = '', $who = '', $pagenumber = 1, $perpage = 0, $sortfield = 'username', $sortorder = 'asc', $resolveIp = false)
 	{

@@ -167,6 +167,8 @@ vB5_Frontend_ExplainQueries::finish();
 /*-------- modified from index.php end --------*/
 
 //new code!!!
+define('CSRF_PROTECTION', false);
+
 require_once('includes/vb5/autoloader.php');
 vB5_Autoloader::register(getcwd());
 vB5_Frontend_Application::init('config.php');
