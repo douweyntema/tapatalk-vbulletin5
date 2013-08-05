@@ -24,6 +24,41 @@ Class MbqRdEtForumPost extends MbqBaseRdEtForumPost {
     }
     
     /**
+     * get forum post position
+     *
+     * @param  Object  $oMbqEtForumPost
+     *
+     * @return  Integer
+     */
+    public function exttGetForumPostPosition($oMbqEtForumPost) {
+        //ref $this->getObjsMbqEtForumPost(),case = 'topic'
+        $search['channel'] = $oMbqEtForumPost->topicId->oriValue;
+    	$search['view'] = vB_Api_Search::FILTER_VIEW_CONVERSATION_THREAD;
+    	$search['depth'] = 1;
+        $search['include_starter'] = true;
+        $search['sort']['created'] = 'asc';
+    	try {
+        	$result = vB_Api::instanceInternal('search')->getInitialResults($search, 1000000, 1, true); //get all the posts to use
+        	if (!MbqMain::$oMbqAppEnv->exttHasErrors($result)) {
+            	$arrPostRecord = $result['results'];
+            } else {
+            	$arrPostRecord = array();
+            }
+        } catch (Exception $e) {
+        	$arrPostRecord = array();
+        }
+        $ret = 1;
+        foreach ($arrPostRecord as $postRecord) {
+            if ($postRecord['content']['nodeid'] == $oMbqEtForumPost->postId->oriValue) {
+                return $ret;
+            }
+            $ret ++;
+        }
+        //not found
+        return 1;
+    }
+    
+    /**
      * get forum post objs
      *
      * @param  Mixed  $var

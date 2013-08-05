@@ -168,6 +168,9 @@ vB5_Frontend_ExplainQueries::finish();
 
 //new code!!!
 define('CSRF_PROTECTION', false);
+if (!defined('VB_ENTRY')) { //for vb 5.0.4
+	define('VB_ENTRY', 1);
+}
 
 require_once('includes/vb5/autoloader.php');
 vB5_Autoloader::register(getcwd());

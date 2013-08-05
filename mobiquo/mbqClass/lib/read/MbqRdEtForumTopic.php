@@ -243,7 +243,7 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
     public function initOMbqEtForumTopic($var, $mbqOpt) {
         if ($mbqOpt['case'] == 'byTopicRecord') {
             $oMbqEtForumTopic = MbqMain::$oClk->newObj('MbqEtForumTopic');
-            $oMbqEtForumTopic->totalPostNum->setOriValue($var['content']['startertotalcount']);
+            $oMbqEtForumTopic->totalPostNum->setOriValue($var['content']['startertotalcount']); //TODO include comments num
             $oMbqEtForumTopic->topicId->setOriValue($var['content']['nodeid']);
             $oMbqEtForumTopic->forumId->setOriValue($var['content']['parentid']);
             //$oMbqEtForumTopic->topicTitle->setOriValue($var['content']['title']);
@@ -256,7 +256,7 @@ Class MbqRdEtForumTopic extends MbqBaseRdEtForumTopic {
             //$oMbqEtForumTopic->postTime->setOriValue($var['content']['created']);
             $oMbqEtForumTopic->postTime->setOriValue($var['content']['lastcontent'] ? $var['content']['lastcontent'] : $var['content']['created']);
             $oMbqEtForumTopic->lastReplyTime->setOriValue($var['content']['lastcontent']);
-            $oMbqEtForumTopic->replyNumber->setOriValue($var['content']['startertotalcount'] - 1);
+            $oMbqEtForumTopic->replyNumber->setOriValue($var['content']['startertotalcount'] - 1);  //TODO include comments num
             if (MbqMain::hasLogin()) {
                 //if ($var['content']['lastcontent'] > MbqMain::$oCurMbqEtUser->mbqBind['userRecord']['lastactivity']) {    //inaccurate
                 if ($var['content']['lastcontent'] > MbqMain::$oMbqAppEnv->currentUserInfo['lastactivity']) {
