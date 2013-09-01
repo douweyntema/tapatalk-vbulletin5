@@ -1,13 +1,14 @@
 Tapatalk Plugin for vBulletin 5.x Installation
 
 -- First Time Installation --
-1. Upload the 'mobiquo' folder to the root of your vBulletin 5 installation. Ensure the folder can be accessed from your browser or else the mod may fail to work as designed.
-2. In the vBulletin 5 AdminCP, go to Projects & Hooks -> Manage Products. Towards the bottom, click the [Add/Import Product] option.
-3. You can import the file from your server using the 'import the XML file from your server' option. Input this './mobiquo/product-tapatalk.xml', then click the Import button.
-4. The plugin has been installed and now you can configure it. The settings are located at AdminCP -> Settings -> Options -> Tapatalk - General Settings.
+    1. Upload the 'mobiquo' folder to the root of your vBulletin 5 installation. Ensure the folder can be accessed from your browser or else the mod may fail to work as designed.
+    2. In the vBulletin 5 AdminCP, go to Projects & Hooks -> Manage Products. Towards the bottom, click the [Add/Import Product] option.
+    3. You can import the file from your server using the 'import the XML file from your server' option. Input this './mobiquo/product-tapatalk.xml', then click the Import button.
+    4. The plugin has been installed and now you can configure it. The settings are located at AdminCP -> Settings -> Options -> Tapatalk - General Settings;
+    5. If it is the first time you install our plugin for your site,please register your site in tapatalk forum owner area:http://tapatalk.com/forum_owner.php.
 
 -- Upgrading from Pre 1.0.0 Tapatalk Plugin --
-If you were using a version of the vBulletin 5 Tapatalk Plugin that came before Version 1.0.0, you should uninstall the Tapatalk Product from the vBulletin 5 AdminCP and also delete the 'mobiquo' folder. You may then continue with the steps listed above.
+    If you were using a version of the vBulletin 5 Tapatalk Plugin that came before Version 1.0.0, you should uninstall the Tapatalk Product from the vBulletin 5 AdminCP and also delete the 'mobiquo' folder. You may then continue with the steps listed above.
 
 -- Changelog --
 vBulletin 5 Series Tapatalk Plugin Version 1.0.2 released
@@ -18,10 +19,10 @@ vBulletin 5 Series Tapatalk Plugin Version 1.0.2 released
     4.Other modifications.
 
 -- Brand Customer Special Instructions --
-By default, the plugin will notify mobile users to download the official Tapatalk app. If you have purchased the BYO license from us and wish to send mobile users to your mobile app, please set that up as required in vBulletin: AdminCP -> Settings -> Options -> Tapatalk - BYO Settings.
+    By default, the plugin will notify mobile users to download the official Tapatalk app. If you have purchased the BYO license from us and wish to send mobile users to your mobile app, please set that up as required in vBulletin: AdminCP -> Settings -> Options -> Tapatalk - BYO Settings.
 
 -- Support Forum --
-If you require additional support, we have a forum setup for just that. Visit the link below:
-https://support.tapatalk.com/forums/vbulletin-discussion.53/
+    If you require additional support, we have a forum setup for just that. Visit the link below:
+    https://support.tapatalk.com/forums/vbulletin-discussion.53/
 
 20130805
