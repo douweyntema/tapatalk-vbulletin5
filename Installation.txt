@@ -11,12 +11,11 @@ Tapatalk Plugin for vBulletin 5.x Installation
     If you were using a version of the vBulletin 5 Tapatalk Plugin that came before Version 1.0.0, you should uninstall the Tapatalk Product from the vBulletin 5 AdminCP and also delete the 'mobiquo' folder. You may then continue with the steps listed above.
 
 -- Changelog --
-vBulletin 5 Series Tapatalk Plugin Version 1.0.2 released
-    Supports vBulletin 5
-    1.Smart Banner improvements.
-    2.Fixed bug:can display nothing and can do nothing in vBulletin 5.0.4.
-    3.support get thread by post and get thread by unread.
-    4.Other modifications.
+    vBulletin 5 Series Tapatalk Plugin Version 1.0.2 released
+    1.support for vBulletin 5;
+    2.fixed pagination issue;
+    3.updated smartbanner;
+    4.other modifications.
 
 -- Brand Customer Special Instructions --
     By default, the plugin will notify mobile users to download the official Tapatalk app. If you have purchased the BYO license from us and wish to send mobile users to your mobile app, please set that up as required in vBulletin: AdminCP -> Settings -> Options -> Tapatalk - BYO Settings.
