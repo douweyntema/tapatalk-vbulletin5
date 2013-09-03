@@ -12,7 +12,7 @@ Tapatalk Plugin for vBulletin 5.x Installation
 
 -- Changelog --
     vBulletin 5 Series Tapatalk Plugin Version 1.0.2 released
-    1.support for vBulletin 5;
+    1.only support for vBulletin 5;
     2.fixed pagination issue;
     3.updated smartbanner;
     4.other modifications.
