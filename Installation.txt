@@ -1,9 +1,9 @@
 Tapatalk Plugin for vBulletin 5.x Installation
 
 -- First Time Installation --
-    1. Upload the 'mobiquo' folder to the root of your vBulletin 5 installation. Ensure the folder can be accessed from your browser or else the mod may fail to work as designed.
-    2. In the vBulletin 5 AdminCP, go to Projects & Hooks -> Manage Products. Towards the bottom, click the [Add/Import Product] option.
-    3. You can import the file from your server using the 'import the XML file from your server' option. Input this './mobiquo/product-tapatalk.xml', then click the Import button.
+    1. Upload the 'mobiquo' folder to the root of your vBulletin 5 installation. Ensure the folder can be accessed from your browser or else the mod may fail to work as designed;
+    2. In the vBulletin 5 AdminCP, go to Projects & Hooks -> Manage Products. Towards the bottom, click the [Add/Import Product] option;
+    3. You can import the file from your server using the 'import the XML file from your server' option. Input this './mobiquo/product-tapatalk.xml', then click the Import button;
     4. The plugin has been installed and now you can configure it. The settings are located at AdminCP -> Settings -> Options -> Tapatalk - General Settings;
     5. If it is the first time you install our plugin for your site,please register your site in tapatalk forum owner area:http://tapatalk.com/forum_owner.php.
 
@@ -23,6 +23,9 @@ Tapatalk Plugin for vBulletin 5.x Installation
 -- Support Forum --
     If you require additional support, we have a forum setup for just that. Visit the link below:
     https://support.tapatalk.com/forums/vbulletin-discussion.53/
+
+-- Github Url --
+    https://github.com/tapatalk/tapatalk-vbulletin5
 
 20130805
 
