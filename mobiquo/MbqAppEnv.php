@@ -74,7 +74,7 @@ Class MbqAppEnv extends MbqBaseAppEnv {
     public function exttEchoException($e) {
         MbqError::alert('', 'Find exception:'.$e->getMessage());
     }
-    
+    // test
 }
 
 ?>
